@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>统计报表 - 我的账本</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-secondary-fixed-variant": "#4e444c", "surface-dim": "#e3d6e9", "on-primary": "#ffffff", "tertiary-container": "#ddbfd2", "tertiary-fixed": "#f9daed", "secondary-fixed": "#eedee8", "surface-container-high": "#f1e4f7", "on-background": "#201926", "on-tertiary-fixed": "#281623", "on-error-container": "#93000a", "inverse-primary": "#ffb0cf", "tertiary-fixed-dim": "#dcbed1", "surface-container-lowest": "#ffffff", "secondary-container": "#eedee8", "surface-variant": "#ebdef1", "surface-container": "#f7e9fd", "on-surface-variant": "#4f444a", "on-secondary": "#ffffff", error: "#ba1a1a", "primary-fixed-dim": "#ffb0cf", secondary: "#665b63", primary: "#904568", "on-secondary-container": "#6d6169", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#56404f", "inverse-surface": "#352d3c", "on-primary-fixed": "#3d0123", background: "#fff7fe", surface: "#fff7fe", tertiary: "#6f5767", "surface-container-highest": "#ebdef1", "primary-container": "#ffb1d0", "on-primary-container": "#833a5c", "surface-bright": "#fff7fe", "inverse-on-surface": "#faecff", "on-primary-fixed-variant": "#742e50", "primary-fixed": "#ffd9e5", others: "#b3cde3", catering: "#fbb4ae", shopping: "#decbe4", housing: "#fed9a6", success: "#10B981", warning: "#F59E0B", outline: "#81737a", "outline-variant": "#d3c2ca", "surface-container-low": "#fbf0ff", "secondary-fixed-dim": "#d1c2cc", "on-secondary-fixed": "#211920", "on-tertiary": "#ffffff", "surface-tint": "#904568", "on-error": "#ffffff", "on-surface": "#201926", "on-tertiary-container": "#634c5c"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {base: "4px", lg: "24px", xs: "8px", "2xl": "48px", gutter: "20px", xl: "32px", sm: "12px", "container-max": "1200px", md: "16px"}, fontFamily: {"headline-md": ["Inter"], "display-lg": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "amount-display": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}], "headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "amount-display": ["36px", {lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chart-container { position: relative; }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky shadow-sm bg-surface dark:bg-surface-dim z-40">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-md">
+<img alt="我的账本 Logo" class="h-10 w-10 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmafVROMidb4nPVLxC_V2wfSFM-AfOEAGYnm5Cn7JneI6ASHhsV9XVzb_cZmYd_0jA5XYxFaIjASlRA2-bCIXDx5ETgw-CkhMqnuEFaMOM0Hstg-0oYYNN3zuYkoQsFCOC9OpjEU8LZQi3GFEbJCI1jZjDBulB6C6Piywa5QzyXbkd0Kpk_ir-_gwDO7EkzkKUai2TExydZA5YaBogufB92hc9S5wzJgw4BSklGPj4e6w2hjh9XFBtciotOx-6vaLMRayNw3R_Zq0"/>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">我的账本</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex max-w-container-max mx-auto min-h-[calc(100vh-64px)]">
+<!-- SideNavBar -->
+<aside class="h-[calc(100vh-64px)] w-64 sticky top-16 hidden md:flex flex-col bg-surface-container dark:bg-surface-container-highest p-md gap-xs">
+<div class="mb-lg px-2">
+<p class="font-body-sm text-on-surface-variant opacity-70">财务管理系统</p>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-full transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">仪表盘</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-full transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-md">收支明细</span>
+</a>
+<a class="flex items-center gap-md p-md bg-primary-container text-on-primary-container rounded-full font-semibold transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md">统计报表</span>
+</a>
+</nav>
+<button class="mt-auto bg-primary text-on-primary py-sm px-lg rounded-full font-semibold flex items-center justify-center gap-sm transition-all hover:opacity-90 active:scale-95 shadow-md">
+<span class="material-symbols-outlined">add</span>
+<span>记一笔</span>
+</button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-gutter md:p-xl">
+<!-- Header Section -->
+<div class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg mb-base">统计报表</h1>
+<p class="text-secondary font-body-md">基于本月财务数据的深入分析</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="bento-grid">
+<!-- Monthly Overview Card -->
+<div class="col-span-full bg-surface-container-lowest p-xl rounded-xl shadow-sm border border-outline-variant/30 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-lg opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[120px] text-primary">account_balance_wallet</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-lg">Monthly Overview</h3>
+<div class="flex flex-col md:flex-row gap-xl items-start md:items-center">
+<div>
+<p class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-xs">本月总支出</p>
+<p class="font-amount-display text-amount-display text-primary">¥3,456.00</p>
+</div>
+<div class="hidden md:block w-px h-16 bg-outline-variant"></div>
+<div>
+<p class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-xs">日均支出</p>
+<p class="font-headline-lg text-headline-lg text-secondary">¥115.20</p>
+</div>
+<div class="ml-auto flex items-center gap-xs bg-success/10 text-success px-md py-xs rounded-full">
+<span class="material-symbols-outlined font-bold text-sm">trending_down</span>
+<span class="font-label-md">较上月下降 12.5%</span>
+</div>
+</div>
+</div>
+<!-- Category Distribution Card -->
+<div class="col-span-full lg:col-span-5 bg-surface-container-lowest p-xl rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-center mb-xl">
+<h3 class="font-headline-md text-headline-md">Category Distribution</h3>
+<span class="material-symbols-outlined text-secondary cursor-help" title="点击扇区查看详情">info</span>
+</div>
+<div class="flex flex-col items-center">
+<!-- Custom SVG Donut Chart -->
+<div class="relative w-48 h-48 mb-xl">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<!-- Background Circle -->
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#f1f5f9" stroke-width="4"></circle>
+<!-- Catering: 35% -->
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#fbb4ae" stroke-dasharray="35 65" stroke-dashoffset="0" stroke-width="4"></circle>
+<!-- Shopping: 28% -->
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#decbe4" stroke-dasharray="28 72" stroke-dashoffset="-35" stroke-width="4"></circle>
+<!-- Housing: 20% -->
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#fed9a6" stroke-dasharray="20 80" stroke-dashoffset="-63" stroke-width="4"></circle>
+<!-- Others: 17% -->
+<circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#b3cde3" stroke-dasharray="17 83" stroke-dashoffset="-83" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-label-md text-secondary">总计</span>
+<span class="font-headline-md text-primary">100%</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="w-full space-y-md">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="w-3 h-3 rounded-full bg-catering"></div>
+<span class="font-body-sm">餐饮美食</span>
+</div>
+<span class="font-body-sm font-semibold">35%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="w-3 h-3 rounded-full bg-shopping"></div>
+<span class="font-body-sm">日常购物</span>
+</div>
+<span class="font-body-sm font-semibold">28%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="w-3 h-3 rounded-full bg-housing"></div>
+<span class="font-body-sm">居住生活</span>
+</div>
+<span class="font-body-sm font-semibold">20%</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="w-3 h-3 rounded-full bg-others"></div>
+<span class="font-body-sm">其他支出</span>
+</div>
+<span class="font-body-sm font-semibold">17%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 7-Day Trend Card -->
+<div class="col-span-full lg:col-span-7 bg-surface-container-lowest p-xl rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-center mb-xl">
+<h3 class="font-headline-md text-headline-md">7-Day Trend</h3>
+<div class="flex gap-xs">
+<span class="text-label-md text-secondary px-sm py-1 rounded-full bg-surface-container">最近一周</span>
+</div>
+</div>
+<!-- Custom Bar Chart UI -->
+<div class="relative h-64 flex items-end justify-between gap-md pb-lg pt-md">
+<!-- Background Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between py-md opacity-10 pointer-events-none">
+<div class="border-b border-outline"></div>
+<div class="border-b border-outline"></div>
+<div class="border-b border-outline"></div>
+<div class="border-b border-outline"></div>
+</div>
+<!-- Bars -->
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary/20 rounded-t-lg transition-all group-hover:bg-primary-container h-[45%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥98</div>
+</div>
+<span class="font-label-md text-secondary mt-md">Mon</span>
+</div>
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary/20 rounded-t-lg transition-all group-hover:bg-primary-container h-[70%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥156</div>
+</div>
+<span class="font-label-md text-secondary mt-md">Tue</span>
+</div>
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary/20 rounded-t-lg transition-all group-hover:bg-primary-container h-[35%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥72</div>
+</div>
+<span class="font-label-md text-secondary mt-md">Wed</span>
+</div>
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary/20 rounded-t-lg transition-all group-hover:bg-primary-container h-[90%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥210</div>
+</div>
+<span class="font-label-md text-secondary mt-md">Thu</span>
+</div>
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary/20 rounded-t-lg transition-all group-hover:bg-primary-container h-[55%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥125</div>
+</div>
+<span class="font-label-md text-secondary mt-md">Fri</span>
+</div>
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary-container rounded-t-lg transition-all h-[80%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥189</div>
+</div>
+<span class="font-label-md text-primary font-bold mt-md">Sat</span>
+</div>
+<div class="relative flex-1 group flex flex-col items-center">
+<div class="w-full max-w-[40px] bg-primary/20 rounded-t-lg transition-all group-hover:bg-primary-container h-[40%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">¥85</div>
+</div>
+<span class="font-label-md text-secondary mt-md">Sun</span>
+</div>
+</div>
+</div>
+<!-- Insights Row -->
+<div class="col-span-full md:col-span-6 bg-surface-container-highest/30 p-xl rounded-xl border border-outline-variant/30 flex items-center gap-lg">
+<div class="w-12 h-12 rounded-full bg-warning/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-warning">lightbulb</span>
+</div>
+<div>
+<p class="font-body-md font-semibold text-on-surface">省钱建议</p>
+<p class="font-body-sm text-secondary">本月餐饮支出占比较高，尝试通过在家烹饪减少支出。</p>
+</div>
+</div>
+<div class="col-span-full md:col-span-6 bg-surface-container-highest/30 p-xl rounded-xl border border-outline-variant/30 flex items-center gap-lg">
+<div class="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-success">savings</span>
+</div>
+<div>
+<p class="font-body-md font-semibold text-on-surface">财务健康度</p>
+<p class="font-body-sm text-secondary">恭喜！您的储蓄率目前保持在 25% 以上，财务状况良好。</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 border-t border-outline-variant bg-surface dark:bg-inverse-surface md:hidden shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="font-label-md text-label-md">明细</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<span class="font-label-md text-label-md">统计</span>
+</a>
+</nav>
+<div class="h-20 md:hidden"></div>
+<script>
+        // Simple micro-interaction for bars
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const bar = item.querySelector('.bg-primary\\/20');
+                if(bar) bar.style.transform = 'scaleY(1.05)';
+            });
+            item.addEventListener('mouseleave', () => {
+                const bar = item.querySelector('.bg-primary\\/20');
+                if(bar) bar.style.transform = 'scaleY(1)';
+            });
+        });
+    </script>
+</body></html>

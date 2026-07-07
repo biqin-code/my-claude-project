@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>首页 - 我的账本</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#904568",
+            "primary-container": "#ffb1d0",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#833a5c",
+            secondary: "#665b63",
+            "secondary-container": "#eedee8",
+            tertiary: "#6f5767",
+            "tertiary-container": "#ddbfd2",
+            surface: "#fff7fe",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#fbf0ff",
+            "surface-container": "#f7e9fd",
+            "surface-container-high": "#f1e4f7",
+            "surface-container-highest": "#ebdef1",
+            "surface-dim": "#e3d6e9",
+            "on-surface": "#201926",
+            "on-surface-variant": "#4f444a",
+            background: "#fff7fe",
+            catering: "#FF6B6B",
+            transport: "#4ECDC4",
+            shopping: "#FFE66D",
+            entertainment: "#95E1D3",
+            housing: "#F38181",
+            medical: "#AA96DA",
+            education: "#FCBAD3",
+            others: "#A8D8EA",
+            success: "#10B981",
+            warning: "#F59E0B",
+            error: "#ba1a1a",
+            outline: "#81737a",
+            "outline-variant": "#d3c2ca"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row">
+  <!-- 侧边导航 (桌面端) -->
+  <aside class="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-6 gap-3 fixed z-40">
+    <div class="flex flex-col gap-3 mb-6">
+      <div class="flex items-center gap-3 mb-1">
+        <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-2xl">🍀</div>
+        <div class="text-lg font-bold text-primary">我的账本</div>
+      </div>
+      <div class="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
+    </div>
+
+    <nav class="flex flex-col gap-3 flex-grow">
+      <a class="bg-primary-container text-on-primary-container rounded-full font-semibold flex items-center gap-4 px-4 py-3 transition-all" href="dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>首页概览</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="transactions.html">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span>收支明细</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="statistics.html">
+        <span class="material-symbols-outlined">analytics</span>
+        <span>统计报表</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="settings.html">
+        <span class="material-symbols-outlined">settings</span>
+        <span>设置</span>
+      </a>
+    </nav>
+
+    <!-- 记一笔按钮 -->
+    <button class="mt-auto bg-primary text-on-primary py-3 px-6 rounded-full font-semibold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md" onclick="showAddModal()">
+      <span class="material-symbols-outlined">add</span>
+      <span>记一笔</span>
+    </button>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="flex-grow md:ml-64 flex flex-col min-h-screen pb-24 md:pb-0">
+    <!-- 顶部导航栏 -->
+    <header class="w-full top-0 sticky z-30 shadow-sm bg-surface flex justify-between items-center px-5 h-16">
+      <div class="flex items-center gap-4">
+        <div class="md:hidden flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-lg">🍀</div>
+          <div class="text-xl font-bold text-primary">我的账本</div>
+        </div>
+        <div class="hidden md:block text-xl font-semibold text-primary">概览</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined text-primary">search</span>
+        </button>
+        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors" onclick="window.location.href='profile.html'">
+          <span class="material-symbols-outlined text-primary">account_circle</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 可滚动内容 -->
+    <div class="px-6 py-8 max-w-6xl mx-auto w-full">
+      <!-- Bento Grid 布局 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+        <!-- 今日支出卡片 -->
+        <div class="md:col-span-8 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 relative overflow-hidden">
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <h2 class="text-xl font-semibold text-on-surface mb-1">今日支出</h2>
+              <p class="text-sm text-on-surface-variant">2024年6月30日 星期日</p>
+            </div>
+            <div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
+              预算充足
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row items-end md:items-center justify-between gap-8">
+            <div class="flex flex-col">
+              <span class="text-xs text-on-surface-variant uppercase tracking-wider mb-2">总计金额</span>
+              <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-primary">¥</span>
+                <span class="text-4xl font-bold text-on-surface">128.50</span>
+              </div>
+            </div>
+
+            <div class="flex-grow max-w-md w-full">
+              <div class="flex justify-between text-xs mb-2">
+                <span class="text-on-surface-variant">类目占比</span>
+                <span class="text-primary font-medium">前三类占 82%</span>
+              </div>
+              <div class="h-3 w-full bg-surface-container rounded-full flex overflow-hidden">
+                <div class="bg-catering h-full" style="width: 45%;"></div>
+                <div class="bg-transport h-full" style="width: 25%;"></div>
+                <div class="bg-shopping h-full" style="width: 12%;"></div>
+                <div class="bg-outline-variant h-full" style="width: 18%;"></div>
+              </div>
+              <div class="flex gap-4 mt-3 overflow-x-auto no-scrollbar">
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                  <div class="w-2 h-2 rounded-full bg-catering"></div>
+                  <span class="text-xs text-on-surface-variant">餐饮 ¥57.8</span>
+                </div>
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                  <div class="w-2 h-2 rounded-full bg-transport"></div>
+                  <span class="text-xs text-on-surface-variant">交通 ¥32.0</span>
+                </div>
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                  <div class="w-2 h-2 rounded-full bg-shopping"></div>
+                  <span class="text-xs text-on-surface-variant">购物 ¥15.4</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 装饰背景 -->
+          <div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+        </div>
+
+        <!-- 存钱计划卡片 -->
+        <div class="md:col-span-4 bg-primary text-on-primary rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-semibold mb-2">存钱计划</h3>
+            <p class="text-sm opacity-80">本月已节省 ¥1,200</p>
+          </div>
+          <div class="mt-6 flex items-center justify-between">
+            <span class="text-3xl font-bold">75%</span>
+            <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+              <span class="material-symbols-outlined">trending_up</span>
+            </div>
+          </div>
+          <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+        </div>
+
+        <!-- 最近记录列表 -->
+        <div class="md:col-span-12 bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
+          <div class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-on-surface">最近记录</h3>
+            <a class="text-primary text-sm font-medium hover:underline" href="transactions.html">查看全部</a>
+          </div>
+          <div class="flex flex-col">
+            <!-- 记录项 1 -->
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border-b border-surface-variant/30">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-catering flex items-center justify-center text-white shadow-sm">
+                  <span class="material-symbols-outlined">restaurant</span>
+                </div>
+                <div>
+                  <div class="font-medium text-on-surface">午餐外卖</div>
+                  <div class="text-sm text-on-surface-variant">餐饮 • 今天 12:30</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold text-on-surface">-¥28.50</div>
+                <div class="text-xs text-on-surface-variant uppercase tracking-tight">支付宝</div>
+              </div>
+            </div>
+
+            <!-- 记录项 2 -->
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border-b border-surface-variant/30">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-transport flex items-center justify-center text-white shadow-sm">
+                  <span class="material-symbols-outlined">directions_bus</span>
+                </div>
+                <div>
+                  <div class="font-medium text-on-surface">地铁扣费</div>
+                  <div class="text-sm text-on-surface-variant">交通 • 今天 08:45</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold text-on-surface">-¥6.00</div>
+                <div class="text-xs text-on-surface-variant uppercase tracking-tight">公交卡</div>
+              </div>
+            </div>
+
+            <!-- 记录项 3 -->
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border-b border-surface-variant/30">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-shopping flex items-center justify-center shadow-sm">
+                  <span class="material-symbols-outlined">shopping_bag</span>
+                </div>
+                <div>
+                  <div class="font-medium text-on-surface">超市购物</div>
+                  <div class="text-sm text-on-surface-variant">购物 • 昨天 20:15</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold text-on-surface">-¥85.40</div>
+                <div class="text-xs text-on-surface-variant uppercase tracking-tight">微信支付</div>
+              </div>
+            </div>
+
+            <!-- 记录项 4 -->
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border-b border-surface-variant/30">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-entertainment flex items-center justify-center shadow-sm">
+                  <span class="material-symbols-outlined">movie</span>
+                </div>
+                <div>
+                  <div class="font-medium text-on-surface">电影票</div>
+                  <div class="text-sm text-on-surface-variant">娱乐 • 昨天 18:00</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold text-on-surface">-¥45.00</div>
+                <div class="text-xs text-on-surface-variant uppercase tracking-tight">支付宝</div>
+              </div>
+            </div>
+
+            <!-- 记录项 5 -->
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-medical flex items-center justify-center text-white shadow-sm">
+                  <span class="material-symbols-outlined">medication</span>
+                </div>
+                <div>
+                  <div class="font-medium text-on-surface">药店买药</div>
+                  <div class="text-sm text-on-surface-variant">医疗 • 6月22日</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-semibold text-on-surface">-¥12.80</div>
+                <div class="text-xs text-on-surface-variant uppercase tracking-tight">现金</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- 底部导航栏 (移动端) -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-lg md:hidden border-t border-outline-variant">
+    <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1" href="dashboard.html">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-xs font-medium">首页</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant" href="transactions.html">
+      <span class="material-symbols-outlined">list_alt</span>
+      <span class="text-xs font-medium">明细</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant" href="statistics.html">
+      <span class="material-symbols-outlined">pie_chart</span>
+      <span class="text-xs font-medium">统计</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant" href="settings.html">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="text-xs font-medium">设置</span>
+    </a>
+  </nav>
+
+  <!-- 记账弹窗 -->
+  <div id="addModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideAddModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">记一笔</h3>
+
+      <!-- 类型切换 -->
+      <div class="flex gap-3 mb-6">
+        <button id="tabExpense" class="flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all" onclick="switchTab('expense')">支出</button>
+        <button id="tabIncome" class="flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all" onclick="switchTab('income')">收入</button>
+      </div>
+
+      <!-- 金额输入 -->
+      <div class="mb-6">
+        <div class="flex items-center justify-center gap-2 text-4xl font-bold">
+          <span class="text-on-surface-variant">¥</span>
+          <input id="amountInput" type="number" step="0.01" placeholder="0.00" class="w-40 text-center bg-transparent outline-none text-on-surface">
+        </div>
+      </div>
+
+      <!-- 分类选择 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">选择分类</p>
+        <div id="categoryGrid" class="grid grid-cols-4 gap-3">
+          <!-- 支出分类 -->
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="catering" onclick="selectCategory(this, 'catering')">
+            <span class="text-2xl">🍜</span>
+            <span class="text-xs">餐饮</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="transport" onclick="selectCategory(this, 'transport')">
+            <span class="text-2xl">🚗</span>
+            <span class="text-xs">交通</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="shopping" onclick="selectCategory(this, 'shopping')">
+            <span class="text-2xl">🛒</span>
+            <span class="text-xs">购物</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="entertainment" onclick="selectCategory(this, 'entertainment')">
+            <span class="text-2xl">🎬</span>
+            <span class="text-xs">娱乐</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="housing" onclick="selectCategory(this, 'housing')">
+            <span class="text-2xl">🏠</span>
+            <span class="text-xs">住房</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="medical" onclick="selectCategory(this, 'medical')">
+            <span class="text-2xl">💊</span>
+            <span class="text-xs">医疗</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="education" onclick="selectCategory(this, 'education')">
+            <span class="text-2xl">📚</span>
+            <span class="text-xs">教育</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
+            <span class="text-2xl">📦</span>
+            <span class="text-xs">其他</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 备注输入 -->
+      <div class="mb-6">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">edit_note</span>
+          <input id="noteInput" type="text" placeholder="添加备注..." class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+        </div>
+      </div>
+
+      <!-- 提交按钮 -->
+      <button id="submitBtn" class="w-full bg-primary text-on-primary py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 transition-all hover:opacity-90" onclick="submitRecord()">
+        <span class="material-symbols-outlined">check</span>
+        <span>保存</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentType = 'expense';
+    let selectedCategory = null;
+
+    // 收入分类
+    const incomeCategories = [
+      { id: 'salary', icon: '💰', name: '工资' },
+      { id: 'bonus', icon: '🎁', name: '奖金' },
+      { id: 'investment', icon: '📈', name: '投资' },
+      { id: 'gift', icon: '🎀', name: '礼金' },
+      { id: 'others', icon: '📦', name: '其他' }
+    ];
+
+    function showAddModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+      resetForm();
+    }
+
+    function hideAddModal() {
+      document.getElementById('addModal').classList.add('hidden');
+    }
+
+    function resetForm() {
+      document.getElementById('amountInput').value = '';
+      document.getElementById('noteInput').value = '';
+      selectedCategory = null;
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
+      });
+    }
+
+    function switchTab(type) {
+      currentType = type;
+      const tabExpense = document.getElementById('tabExpense');
+      const tabIncome = document.getElementById('tabIncome');
+      const categoryGrid = document.getElementById('categoryGrid');
+
+      if (type === 'expense') {
+        tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
+        tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
+        categoryGrid.innerHTML = `
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="catering" onclick="selectCategory(this, 'catering')">
+            <span class="text-2xl">🍜</span>
+            <span class="text-xs">餐饮</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="transport" onclick="selectCategory(this, 'transport')">
+            <span class="text-2xl">🚗</span>
+            <span class="text-xs">交通</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="shopping" onclick="selectCategory(this, 'shopping')">
+            <span class="text-2xl">🛒</span>
+            <span class="text-xs">购物</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="entertainment" onclick="selectCategory(this, 'entertainment')">
+            <span class="text-2xl">🎬</span>
+            <span class="text-xs">娱乐</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="housing" onclick="selectCategory(this, 'housing')">
+            <span class="text-2xl">🏠</span>
+            <span class="text-xs">住房</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="medical" onclick="selectCategory(this, 'medical')">
+            <span class="text-2xl">💊</span>
+            <span class="text-xs">医疗</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="education" onclick="selectCategory(this, 'education')">
+            <span class="text-2xl">📚</span>
+            <span class="text-xs">教育</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
+            <span class="text-2xl">📦</span>
+            <span class="text-xs">其他</span>
+          </button>
+        `;
+      } else {
+        tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
+        tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
+        categoryGrid.innerHTML = `
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="salary" onclick="selectCategory(this, 'salary')">
+            <span class="text-2xl">💰</span>
+            <span class="text-xs">工资</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="bonus" onclick="selectCategory(this, 'bonus')">
+            <span class="text-2xl">🎁</span>
+            <span class="text-xs">奖金</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="investment" onclick="selectCategory(this, 'investment')">
+            <span class="text-2xl">📈</span>
+            <span class="text-xs">投资</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="gift" onclick="selectCategory(this, 'gift')">
+            <span class="text-2xl">🎀</span>
+            <span class="text-xs">礼金</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
+            <span class="text-2xl">📦</span>
+            <span class="text-xs">其他</span>
+          </button>
+        `;
+      }
+      selectedCategory = null;
+    }
+
+    function selectCategory(btn, category) {
+      document.querySelectorAll('.category-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
+      });
+      btn.classList.add('ring-2', 'ring-primary', 'bg-primary-container');
+      selectedCategory = category;
+    }
+
+    function submitRecord() {
+      const amount = parseFloat(document.getElementById('amountInput').value);
+      const note = document.getElementById('noteInput').value.trim();
+
+      if (!amount || amount <= 0) {
+        alert('请输入有效金额');
+        return;
+      }
+
+      if (!selectedCategory) {
+        alert('请选择分类');
+        return;
+      }
+
+      const record = {
+        id: Date.now(),
+        type: currentType,
+        category: selectedCategory,
+        amount: currentType === 'expense' ? -amount : amount,
+        note: note || (currentType === 'expense' ? '支出' : '收入'),
+        date: new Date().toISOString()
+      };
+
+      // 保存到 LocalStorage
+      const records = JSON.parse(localStorage.getItem('records') || '[]');
+      records.unshift(record);
+      localStorage.setItem('records', JSON.stringify(records));
+
+      hideAddModal();
+
+      // 刷新页面以显示新记录
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>

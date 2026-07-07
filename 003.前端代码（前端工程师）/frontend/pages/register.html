@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>注册 - 我的账本</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#904568",
+            "primary-container": "#ffb1d0",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#833a5c",
+            secondary: "#665b63",
+            "secondary-container": "#eedee8",
+            tertiary: "#6f5767",
+            "tertiary-container": "#ddbfd2",
+            surface: "#fff7fe",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#fbf0ff",
+            "surface-container": "#f7e9fd",
+            "surface-container-high": "#f1e4f7",
+            "surface-container-highest": "#ebdef1",
+            "surface-dim": "#e3d6e9",
+            "on-surface": "#201926",
+            "on-surface-variant": "#4f444a",
+            background: "#fff7fe",
+            catering: "#FF6B6B",
+            transport: "#4ECDC4",
+            shopping: "#FFE66D",
+            entertainment: "#95E1D3",
+            housing: "#F38181",
+            medical: "#AA96DA",
+            education: "#FCBAD3",
+            others: "#A8D8EA",
+            success: "#10B981",
+            warning: "#F59E0B",
+            error: "#ba1a1a",
+            outline: "#81737a",
+            "outline-variant": "#d3c2ca"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .bg-mesh {
+      background-color: #fff7fe;
+      background-image:
+        radial-gradient(at 0% 0%, rgba(255, 177, 208, 0.2) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(220, 190, 209, 0.2) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(247, 233, 253, 0.4) 0px, transparent 50%);
+    }
+  </style>
+</head>
+<body class="bg-mesh min-h-screen flex items-center justify-center p-6 md:p-8">
+  <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+
+    <!-- 注册表单 -->
+    <div class="flex flex-col items-center w-full max-w-md mx-auto lg:ml-auto lg:mr-0">
+      <div class="w-full bg-surface-container-lowest rounded-2xl p-8 shadow-lg">
+
+        <!-- 品牌标识 -->
+        <div class="flex flex-col items-center mb-8">
+          <div class="w-24 h-24 mb-4 rounded-full bg-pink-100 flex items-center justify-center text-6xl">🍀</div>
+          <h1 class="text-2xl font-bold text-primary">我的账本</h1>
+          <p class="text-sm text-on-surface-variant mt-2">开启您的财务成长之旅</p>
+        </div>
+
+        <!-- 表单 -->
+        <form class="space-y-5" onsubmit="handleRegister(event)">
+          <!-- 用户名 -->
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-on-surface-variant ml-3">用户名</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">person</span>
+              <input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-transparent rounded-full text-base focus:border-primary-container focus:bg-white outline-none transition-all" id="username" maxlength="20" minlength="4" placeholder="4-20位字符" type="text" required autocomplete="off"/>
+            </div>
+          </div>
+
+          <!-- 密码 -->
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-on-surface-variant ml-3">密码</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
+              <input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-transparent rounded-full text-base focus:border-primary-container focus:bg-white outline-none transition-all" id="password" minlength="6" placeholder="至少6位字符" type="password" required autocomplete="off"/>
+            </div>
+          </div>
+
+          <!-- 确认密码 -->
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-on-surface-variant ml-3">确认密码</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">verified_user</span>
+              <input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-transparent rounded-full text-base focus:border-primary-container focus:bg-white outline-none transition-all" id="confirmPassword" placeholder="请再次输入密码" type="password" required autocomplete="off"/>
+            </div>
+          </div>
+
+          <!-- 错误提示 -->
+          <div class="text-error text-sm text-center hidden" id="error-message"></div>
+
+          <!-- 注册按钮 -->
+          <div class="pt-4">
+            <button class="w-full bg-primary hover:brightness-105 active:scale-95 text-lg font-semibold py-4 rounded-full shadow-lg transition-all flex items-center justify-center gap-2 text-on-primary" type="submit">
+              <span>立即注册</span>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- 服务条款 -->
+        <div class="mt-6 text-center">
+          <p class="text-xs text-outline">注册即代表您同意 <a class="text-primary hover:underline font-medium" href="#">服务条款</a> 和 <a class="text-primary hover:underline font-medium" href="#">隐私政策</a></p>
+        </div>
+      </div>
+
+      <!-- 登录入口 -->
+      <div class="mt-6 text-center">
+        <p class="text-base text-on-surface-variant">已有账号？ <a class="text-primary font-semibold hover:underline" href="login.html">返回登录</a></p>
+      </div>
+    </div>
+
+    <!-- 右侧插图 -->
+    <div class="hidden lg:flex items-center justify-center p-8">
+      <div class="w-full max-w-md aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
+        <div class="w-full h-full rounded-2xl bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center text-8xl">💰</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function handleRegister(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorMessage = document.getElementById('error-message');
+
+      errorMessage.classList.add('hidden');
+
+      if (!/^[a-zA-Z0-9]{4,20}$/.test(username)) {
+        showError('用户名需为4-20位字母或数字');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('密码需6位以上');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showError('两次密码输入不一致');
+        return;
+      }
+
+      alert('注册成功！请登录。');
+      window.location.href = 'login.html';
+    }
+
+    function showError(message) {
+      const errorMessage = document.getElementById('error-message');
+      errorMessage.textContent = message;
+      errorMessage.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

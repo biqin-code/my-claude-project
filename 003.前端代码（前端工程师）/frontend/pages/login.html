@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>登录 - 我的账本</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#904568",
+            "primary-container": "#ffb1d0",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#833a5c",
+            secondary: "#665b63",
+            "secondary-container": "#eedee8",
+            tertiary: "#6f5767",
+            "tertiary-container": "#ddbfd2",
+            surface: "#fff7fe",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#fbf0ff",
+            "surface-container": "#f7e9fd",
+            "surface-container-high": "#f1e4f7",
+            "surface-container-highest": "#ebdef1",
+            "surface-dim": "#e3d6e9",
+            "on-surface": "#201926",
+            "on-surface-variant": "#4f444a",
+            background: "#fff7fe",
+            catering: "#FF6B6B",
+            transport: "#4ECDC4",
+            shopping: "#FFE66D",
+            entertainment: "#95E1D3",
+            housing: "#F38181",
+            medical: "#AA96DA",
+            education: "#FCBAD3",
+            others: "#A8D8EA",
+            success: "#10B981",
+            warning: "#F59E0B",
+            error: "#ba1a1a",
+            outline: "#81737a",
+            "outline-variant": "#d3c2ca"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 overflow-hidden relative bg-background">
+  <!-- 背景装饰 -->
+  <div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none overflow-hidden">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-success/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <main class="w-full max-w-md z-10">
+    <div class="bg-surface-container-lowest rounded-2xl p-8 flex flex-col items-center shadow-lg">
+      <!-- Logo和标题 -->
+      <div class="mb-6 flex flex-col items-center gap-3">
+        <div class="w-20 h-20 rounded-full bg-pink-100 flex items-center justify-center text-5xl">🍀</div>
+        <h1 class="text-2xl font-bold text-primary">我的账本</h1>
+        <p class="text-sm text-secondary">开启您的财务极简之旅</p>
+      </div>
+
+      <!-- 登录表单 -->
+      <form class="w-full flex flex-col gap-5" onsubmit="handleLogin(event)">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm text-on-surface-variant" for="username">用户名</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">person</span>
+            <input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-base focus:ring-2 focus:ring-primary focus:border-transparent outline-none placeholder:text-outline-variant" id="username" name="username" placeholder="请输入您的用户名" type="text" required/>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <label class="text-sm text-on-surface-variant" for="password">密码</label>
+            <a class="text-sm text-primary hover:underline" href="#">忘记密码？</a>
+          </div>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
+            <input class="w-full pl-12 pr-12 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-base focus:ring-2 focus:ring-primary focus:border-transparent outline-none placeholder:text-outline-variant" id="password" name="password" placeholder="请输入您的登录密码" type="password" required/>
+            <button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary" type="button" onclick="togglePassword()">
+              <span class="material-symbols-outlined" id="visibility-icon">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input class="w-4 h-4 text-primary border-outline rounded" id="remember" type="checkbox"/>
+          <label class="text-sm text-on-surface-variant cursor-pointer" for="remember">记住登录状态</label>
+        </div>
+
+        <button class="mt-2 w-full text-lg font-semibold py-4 rounded-xl shadow-sm hover:brightness-105 active:scale-[0.98] transition-all flex justify-center items-center gap-2 bg-primary text-on-primary" type="submit">
+          登录
+          <span class="material-symbols-outlined">login</span>
+        </button>
+      </form>
+
+      <!-- 注册入口 -->
+      <div class="mt-8 w-full">
+        <div class="relative flex items-center mb-6">
+          <div class="flex-grow border-t border-outline-variant"></div>
+          <span class="flex-shrink mx-4 text-xs text-outline-variant">快捷方式</span>
+          <div class="flex-grow border-t border-outline-variant"></div>
+        </div>
+
+        <div class="flex justify-center gap-4 mb-6">
+          <button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all active:scale-90">
+            <span class="material-symbols-outlined text-secondary">fingerprint</span>
+          </button>
+          <button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all active:scale-90">
+            <span class="material-symbols-outlined text-secondary">face</span>
+          </button>
+        </div>
+
+        <div class="text-center">
+          <p class="text-sm text-on-surface-variant">
+            没有账号？
+            <a class="text-primary font-semibold hover:underline" href="register.html">立即注册</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-6 text-center">
+      <p class="text-xs text-outline">© 2024 我的账本 - 智能财务管理专家</p>
+      <div class="flex justify-center gap-4 mt-2">
+        <a class="text-xs text-outline-variant hover:text-primary transition-colors" href="#">隐私政策</a>
+        <a class="text-xs text-outline-variant hover:text-primary transition-colors" href="#">服务条款</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const icon = document.getElementById('visibility-icon');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        passwordInput.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        alert('请输入用户名和密码');
+        return;
+      }
+
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

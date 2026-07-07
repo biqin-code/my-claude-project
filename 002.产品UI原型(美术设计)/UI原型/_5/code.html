@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>登录 - 我的账本</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-variant": "#ebdef1", surface: "#fff7fe", others: "#A8D8EA", "primary-fixed-dim": "#ffb0cf", danger: "#EF4444", "on-tertiary-container": "#634c5c", "on-secondary-fixed-variant": "#4e444c", "secondary-container": "#eedee8", "on-secondary-fixed": "#211920", "on-primary-container": "#833a5c", secondary: "#665b63", transport: "#4ECDC4", "tertiary-fixed-dim": "#dcbed1", "surface-container-low": "#fbf0ff", success: "#10B981", outline: "#81737a", "secondary-fixed": "#eedee8", "on-secondary-container": "#6d6169", catering: "#FF6B6B", "surface-container": "#f7e9fd", housing: "#F38181", "surface-container-high": "#f1e4f7", tertiary: "#6f5767", "on-secondary": "#ffffff", "on-primary-fixed": "#3d0123", background: "#fff7fe", primary: "#904568", "inverse-primary": "#ffb0cf", "surface-container-highest": "#ebdef1", "on-surface-variant": "#4f444a", education: "#FCBAD3", "error-container": "#ffdad6", "tertiary-fixed": "#f9daed", warning: "#F59E0B", "on-background": "#201926", "on-tertiary-fixed-variant": "#56404f", "surface-bright": "#fff7fe", "inverse-on-surface": "#faecff", "on-primary-fixed-variant": "#742e50", "primary-container": "#ffb1d0", error: "#ba1a1a", entertainment: "#95E1D3", "inverse-surface": "#352d3c", "tertiary-container": "#ddbfd2", shopping: "#FFE66D", "on-surface": "#201926", medical: "#AA96DA", "on-tertiary-fixed": "#281623", "surface-container-lowest": "#ffffff", "primary-fixed": "#ffd9e5", "surface-tint": "#904568", "on-primary": "#ffffff", "on-error": "#ffffff", "on-tertiary": "#ffffff", "on-error-container": "#93000a", "secondary-fixed-dim": "#d1c2cc", "surface-dim": "#e3d6e9", "outline-variant": "#d3c2ca"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {base: "4px", lg: "24px", xs: "8px", "2xl": "48px", gutter: "20px", xl: "32px", sm: "12px", "container-max": "1200px", md: "16px"}, fontFamily: {"headline-md": ["Inter"], "display-lg": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "amount-display": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}], "headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "amount-display": ["36px", {lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            background-color: #f4fbf4; /* surface from config */
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(51, 65, 85, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-gutter overflow-hidden relative" style="background-color: #fff7fe;">
+<div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none overflow-hidden">
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl animate-pulse"></div>
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-success/10 rounded-full blur-3xl" style="animation: pulse 8s infinite alternate;"></div>
+</div>
+<main class="w-full max-w-md z-10">
+<div class="glass-card rounded-xl p-xl flex flex-col items-center bg-surface-container-lowest">
+<div class="mb-lg flex flex-col items-center gap-base">
+<img alt="我的账本 Logo" class="w-20 h-20 object-contain drop-shadow-sm mb-xs" src="https://lh3.googleusercontent.com/aida/AP1WRLsg0JPqb7WxIKn6s8IV0NyN1l8u5xbEO-nMHYknBWo8DG5-_Wm-GnWiTb0UMBXlqfEr0_1ddFg4wCZSbxMyNL0shdbPTcqLYPMq9aT0qe4SC446bd6bvDIxgTiIdfaQg2KadEuL3FLbTJDtQUgKZoqXtH8ENEIt9sldcL50nhnhwEREL7TDJIklS4w3GDaNd3X8ZgFCuFc1kxWO2O9maw_06cKpfOU3sZJ7703cTymhB5xxM0dT7ICrZw"/>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">我的账本</h1>
+<p class="font-body-sm text-body-sm text-secondary-fixed-dim">开启您的财务极简之旅</p>
+</div>
+<form action="#" class="w-full flex flex-col gap-md" method="POST" onsubmit="return false;">
+<div class="flex flex-col gap-base">
+<label class="font-label-md text-label-md text-on-surface-variant px-base" for="username">用户名</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[20px] transition-colors group-focus-within:text-primary">person</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder:text-outline-variant" id="username" name="username" placeholder="请输入您的用户名" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-base">
+<div class="flex justify-between items-center px-base">
+<label class="font-label-md text-label-md text-on-surface-variant" for="password">密码</label>
+<a class="font-label-md text-label-md text-primary hover:underline transition-all" href="#">忘记密码？</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[20px] transition-colors group-focus-within:text-primary">lock</span>
+<input class="w-full pl-12 pr-12 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none placeholder:text-outline-variant" id="password" name="password" placeholder="请输入您的登录密码" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-xs px-base mt-xs">
+<input class="w-4 h-4 text-primary border-outline rounded focus:ring-primary" id="remember" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer" for="remember">记住登录状态</label>
+</div>
+<button class="mt-md w-full font-headline-md text-headline-md py-3.5 rounded-lg shadow-sm hover:brightness-105 active:scale-[0.98] transition-all duration-150 flex justify-center items-center gap-xs bg-primary text-on-primary" type="submit">
+                    登录
+                    <span class="material-symbols-outlined text-[22px]">login</span>
+</button>
+</form>
+<div class="mt-xl w-full">
+<div class="relative flex items-center mb-lg">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-4 font-label-md text-label-md text-outline-variant">快捷方式</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<div class="flex justify-center gap-lg mb-lg">
+<button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all active:scale-90">
+<span class="material-symbols-outlined text-secondary">fingerprint</span>
+</button>
+<button class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all active:scale-90">
+<span class="material-symbols-outlined text-secondary">face</span>
+</button>
+</div>
+<div class="text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        没有账号？ 
+                        <a class="text-primary font-semibold hover:underline ml-xs transition-all" href="#">立即注册</a>
+</p>
+</div>
+</div>
+</div>
+<footer class="mt-lg text-center">
+<p class="font-label-md text-label-md text-outline">© 2024 我的账本 - 智能财务管理专家</p>
+<div class="flex justify-center gap-md mt-xs">
+<a class="font-label-md text-label-md text-outline-variant hover:text-primary transition-colors" href="#">隐私政策</a>
+<a class="font-label-md text-label-md text-outline-variant hover:text-primary transition-colors" href="#">服务条款</a>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction for input fields
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('ring-2', 'ring-primary/20');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('ring-2', 'ring-primary/20');
+            });
+        });
+
+        // Simple visibility toggle for password
+        const passwordBtn = document.querySelector('button[type="button"]');
+        const passwordInput = document.getElementById('password');
+        const visibilityIcon = passwordBtn.querySelector('span');
+
+        passwordBtn.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                visibilityIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                visibilityIcon.textContent = 'visibility';
+            }
+        });
+    </script>
+</body></html>

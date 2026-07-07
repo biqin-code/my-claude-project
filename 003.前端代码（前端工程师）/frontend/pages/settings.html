@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>设置 - 我的账本</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#904568",
+            "primary-container": "#ffb1d0",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#833a5c",
+            secondary: "#665b63",
+            "secondary-container": "#eedee8",
+            tertiary: "#6f5767",
+            "tertiary-container": "#ddbfd2",
+            surface: "#fff7fe",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#fbf0ff",
+            "surface-container": "#f7e9fd",
+            "surface-container-high": "#f1e4f7",
+            "surface-container-highest": "#ebdef1",
+            "surface-dim": "#e3d6e9",
+            "on-surface": "#201926",
+            "on-surface-variant": "#4f444a",
+            background: "#fff7fe",
+            catering: "#FF6B6B",
+            transport: "#4ECDC4",
+            shopping: "#FFE66D",
+            entertainment: "#95E1D3",
+            housing: "#F38181",
+            medical: "#AA96DA",
+            education: "#FCBAD3",
+            others: "#A8D8EA",
+            success: "#10B981",
+            warning: "#F59E0B",
+            error: "#ba1a1a",
+            outline: "#81737a",
+            "outline-variant": "#d3c2ca"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+  <!-- 侧边导航 (桌面端) -->
+  <aside class="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-6 gap-3 fixed z-40">
+    <div class="flex flex-col gap-3 mb-6">
+      <div class="flex items-center gap-3 mb-1">
+        <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-2xl">🍀</div>
+        <div class="text-lg font-bold text-primary">我的账本</div>
+      </div>
+      <div class="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
+    </div>
+
+    <nav class="flex flex-col gap-3 flex-grow">
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>首页概览</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="transactions.html">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span>收支明细</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="statistics.html">
+        <span class="material-symbols-outlined">analytics</span>
+        <span>统计报表</span>
+      </a>
+      <a class="bg-primary-container text-on-primary-container rounded-full font-semibold flex items-center gap-4 px-4 py-3 transition-all" href="settings.html">
+        <span class="material-symbols-outlined">settings</span>
+        <span>设置</span>
+      </a>
+    </nav>
+
+    <!-- 记一笔按钮 -->
+    <button class="mt-auto bg-primary text-on-primary py-3 px-6 rounded-full font-semibold flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-md" onclick="showAddModal()">
+      <span class="material-symbols-outlined">add</span>
+      <span>记一笔</span>
+    </button>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="flex-1 md:ml-64 flex flex-col min-h-screen pb-24 md:pb-0">
+    <!-- 顶部导航栏 -->
+    <header class="w-full top-0 sticky shadow-sm bg-surface z-30 flex justify-between items-center px-5 h-16">
+      <div class="flex items-center gap-4">
+        <div class="md:hidden flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-lg">🍀</div>
+          <div class="text-xl font-bold text-primary">我的账本</div>
+        </div>
+        <div class="hidden md:block text-xl font-semibold text-primary">设置</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined text-primary">account_circle</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 页面内容 -->
+    <div class="flex-1 px-6 py-8 max-w-6xl mx-auto w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- 账户管理 -->
+        <section class="lg:col-span-12">
+          <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-primary-container">account_circle</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-on-surface">账户管理</h3>
+                <p class="text-sm text-on-surface-variant">管理您的账户信息和安全设置</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- 用户信息 -->
+              <div onclick="showUserInfoModal()" class="bg-white rounded-xl p-5 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
+                <div class="w-14 h-14 rounded-full bg-pink-100 flex items-center justify-center text-3xl overflow-hidden" id="userAvatar">
+                  👤
+                </div>
+                <div class="flex-1">
+                  <h4 id="userName" class="font-semibold text-on-surface">林清怡 (Claire)</h4>
+                  <p id="userEmail" class="text-sm text-on-surface-variant">premium@account.com</p>
+                </div>
+                <span class="material-symbols-outlined text-outline">chevron_right</span>
+              </div>
+
+              <!-- 修改密码 -->
+              <div onclick="showPasswordModal()" class="bg-white rounded-xl p-5 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
+                <div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-secondary">key</span>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-semibold text-on-surface">修改登录密码</h4>
+                  <p class="text-sm text-on-surface-variant">上次修改于 30 天前</p>
+                </div>
+                <span class="material-symbols-outlined text-outline">chevron_right</span>
+              </div>
+
+              <!-- 安全设备 -->
+              <div onclick="showDevicesModal()" class="bg-white rounded-xl p-5 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
+                <div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-secondary">devices</span>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-semibold text-on-surface">管理受信任设备</h4>
+                  <p class="text-sm text-on-surface-variant">当前有 2 台设备登录</p>
+                </div>
+                <span class="material-symbols-outlined text-outline">chevron_right</span>
+              </div>
+
+              <!-- 登录日志 -->
+              <div onclick="showLoginHistoryModal()" class="bg-white rounded-xl p-5 flex items-center gap-4 cursor-pointer hover:shadow-md transition-all">
+                <div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-secondary">history</span>
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-semibold text-on-surface">登录活动</h4>
+                  <p class="text-sm text-on-surface-variant">查看您的登录历史记录</p>
+                </div>
+                <span class="material-symbols-outlined text-outline">chevron_right</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 分类管理 -->
+        <section class="lg:col-span-12">
+          <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-on-tertiary-container">category</span>
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-on-surface">分类管理</h3>
+                  <p class="text-sm text-on-surface-variant">管理您的支出和收入分类</p>
+                </div>
+              </div>
+              <button class="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-all" onclick="showCategoryModal()">
+                <span class="material-symbols-outlined text-base">add</span>
+                <span>添加分类</span>
+              </button>
+            </div>
+
+            <!-- 支出分类 -->
+            <div class="mb-8">
+              <h4 class="text-base font-semibold text-on-surface mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-catering"></span>
+                支出分类
+              </h4>
+              <div id="expenseCategories" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- 支出分类动态渲染 -->
+              </div>
+            </div>
+
+            <!-- 收入分类 -->
+            <div>
+              <h4 class="text-base font-semibold text-on-surface mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-success"></span>
+                收入分类
+              </h4>
+              <div id="incomeCategories" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- 收入分类动态渲染 -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部导航栏 (移动端) -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-lg md:hidden border-t border-outline-variant rounded-t-xl">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="dashboard.html">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-xs font-medium">首页</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="transactions.html">
+      <span class="material-symbols-outlined">list_alt</span>
+      <span class="text-xs font-medium">明细</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="statistics.html">
+      <span class="material-symbols-outlined">pie_chart</span>
+      <span class="text-xs font-medium">统计</span>
+    </a>
+    <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1" href="settings.html">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+      <span class="text-xs font-medium">设置</span>
+    </a>
+  </nav>
+
+  <!-- 背景装饰 -->
+  <div class="fixed inset-0 pointer-events-none z-[-1] opacity-40 overflow-hidden">
+    <div class="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-pink-200 blur-[120px] rounded-full animate-pulse"></div>
+    <div class="absolute bottom-[10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-200 blur-[120px] rounded-full"></div>
+  </div>
+
+  <!-- 记一笔弹窗 -->
+  <div id="addModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideAddModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">记一笔</h3>
+
+      <!-- 类型切换 -->
+      <div class="flex gap-3 mb-6">
+        <button id="tabExpense" class="flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all" onclick="switchTab('expense')">支出</button>
+        <button id="tabIncome" class="flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all" onclick="switchTab('income')">收入</button>
+      </div>
+
+      <!-- 金额输入 -->
+      <div class="mb-6">
+        <div class="flex items-center justify-center gap-2 text-4xl font-bold">
+          <span class="text-on-surface-variant">¥</span>
+          <input id="amountInput" type="number" step="0.01" placeholder="0.00" class="w-40 text-center bg-transparent outline-none text-on-surface">
+        </div>
+      </div>
+
+      <!-- 分类选择 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">选择分类</p>
+        <div id="categoryGrid" class="grid grid-cols-4 gap-3">
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="catering" onclick="selectCategory(this, 'catering')">
+            <span class="text-2xl">🍜</span>
+            <span class="text-xs">餐饮</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="transport" onclick="selectCategory(this, 'transport')">
+            <span class="text-2xl">🚗</span>
+            <span class="text-xs">交通</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="shopping" onclick="selectCategory(this, 'shopping')">
+            <span class="text-2xl">🛒</span>
+            <span class="text-xs">购物</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="entertainment" onclick="selectCategory(this, 'entertainment')">
+            <span class="text-2xl">🎬</span>
+            <span class="text-xs">娱乐</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="housing" onclick="selectCategory(this, 'housing')">
+            <span class="text-2xl">🏠</span>
+            <span class="text-xs">住房</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="medical" onclick="selectCategory(this, 'medical')">
+            <span class="text-2xl">💊</span>
+            <span class="text-xs">医疗</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="education" onclick="selectCategory(this, 'education')">
+            <span class="text-2xl">📚</span>
+            <span class="text-xs">教育</span>
+          </button>
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
+            <span class="text-2xl">📦</span>
+            <span class="text-xs">其他</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 备注输入 -->
+      <div class="mb-6">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">edit_note</span>
+          <input id="noteInput" type="text" placeholder="添加备注..." class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+        </div>
+      </div>
+
+      <!-- 提交按钮 -->
+      <button id="submitBtn" class="w-full bg-primary text-on-primary py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 transition-all hover:opacity-90" onclick="submitRecord()">
+        <span class="material-symbols-outlined">check</span>
+        <span>保存</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 添加分类弹窗 -->
+  <div id="categoryModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideCategoryModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">添加分类</h3>
+
+      <!-- 类型选择 -->
+      <div class="flex gap-3 mb-6">
+        <button id="catTypeExpense" class="flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all" onclick="switchCatType('expense')">支出</button>
+        <button id="catTypeIncome" class="flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all" onclick="switchCatType('income')">收入</button>
+      </div>
+
+      <!-- Emoji选择 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">选择图标</p>
+        <div id="emojiGrid" class="grid grid-cols-6 gap-2 p-4 bg-surface-container rounded-xl max-h-48 overflow-y-auto">
+          <!-- Emoji选择器 -->
+        </div>
+        <div class="mt-3 flex items-center gap-3">
+          <span class="text-sm text-on-surface-variant">已选:</span>
+          <span id="selectedEmoji" class="text-3xl">🍜</span>
+          <button class="ml-auto text-xs text-primary underline" onclick="randomEmoji()">随机</button>
+        </div>
+      </div>
+
+      <!-- 分类名称 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">分类名称</p>
+        <input id="categoryNameInput" type="text" maxlength="10" placeholder="请输入分类名称" class="w-full px-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+      </div>
+
+      <!-- 提交按钮 -->
+      <button id="addCategoryBtn" class="w-full bg-primary text-on-primary py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 transition-all hover:opacity-90" onclick="addCategory()">
+        <span class="material-symbols-outlined">check</span>
+        <span>添加</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 删除确认弹窗 -->
+  <div id="deleteModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideDeleteModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-lowest rounded-2xl p-6 max-w-sm w-[90vw]">
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-error text-3xl">delete</span>
+        </div>
+        <h3 class="text-xl font-semibold text-on-surface mb-2">删除分类</h3>
+        <p id="deleteCategoryName" class="text-sm text-on-surface-variant mb-6">确定要删除这个分类吗？</p>
+        <div class="flex gap-3">
+          <button class="flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all" onclick="hideDeleteModal()">取消</button>
+          <button id="confirmDeleteBtn" class="flex-1 py-3 rounded-full font-semibold bg-error text-white transition-all" onclick="confirmDelete()">删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户信息编辑弹窗 -->
+  <div id="userInfoModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideUserInfoModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">编辑用户信息</h3>
+
+      <!-- 头像选择 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3 text-center">选择头像</p>
+        <div id="avatarGrid" class="grid grid-cols-6 gap-2 p-4 bg-surface-container rounded-xl max-h-48 overflow-y-auto">
+          <!-- 头像渲染 -->
+        </div>
+        <!-- 上传自定义图片 -->
+        <div class="mt-3 flex items-center gap-3 justify-center">
+          <span class="text-sm text-on-surface-variant">已选:</span>
+          <div id="avatarPreview" class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-5xl overflow-hidden border-2 border-primary">
+            <span id="selectedAvatar">👤</span>
+          </div>
+          <label class="cursor-pointer">
+            <input type="file" id="avatarFileInput" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
+            <span class="px-4 py-2 bg-primary text-white rounded-full text-sm hover:opacity-90 transition-all">上传图片</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 用户名 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">用户名</p>
+        <input id="userNameInput" type="text" maxlength="20" placeholder="请输入用户名" class="w-full px-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+      </div>
+
+      <!-- 邮箱 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">邮箱</p>
+        <input id="userEmailInput" type="email" placeholder="请输入邮箱" class="w-full px-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+      </div>
+
+      <!-- 提交按钮 -->
+      <button id="saveUserInfoBtn" class="w-full bg-primary text-on-primary py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 transition-all hover:opacity-90" onclick="saveUserInfo()">
+        <span class="material-symbols-outlined">check</span>
+        <span>保存</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 修改密码弹窗 -->
+  <div id="passwordModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hidePasswordModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">修改登录密码</h3>
+
+      <!-- 原密码 -->
+      <div class="mb-4">
+        <p class="text-sm text-on-surface-variant mb-3">原密码</p>
+        <input id="oldPasswordInput" type="password" placeholder="请输入原密码" class="w-full px-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+      </div>
+
+      <!-- 新密码 -->
+      <div class="mb-4">
+        <p class="text-sm text-on-surface-variant mb-3">新密码</p>
+        <input id="newPasswordInput" type="password" placeholder="请输入新密码" class="w-full px-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+      </div>
+
+      <!-- 确认新密码 -->
+      <div class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">确认新密码</p>
+        <input id="confirmPasswordInput" type="password" placeholder="请再次输入新密码" class="w-full px-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary">
+      </div>
+
+      <!-- 提交按钮 -->
+      <button class="w-full bg-primary text-on-primary py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 transition-all hover:opacity-90" onclick="savePassword()">
+        <span class="material-symbols-outlined">check</span>
+        <span>保存</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 管理受信任设备弹窗 -->
+  <div id="devicesModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideDevicesModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">管理受信任设备</h3>
+
+      <div class="space-y-4">
+        <!-- 当前设备 -->
+        <div class="bg-white rounded-xl p-4 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-success">smartphone</span>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-on-surface">当前设备</h4>
+            <p class="text-sm text-on-surface-variant">iPhone 14 Pro • 刚刚活跃</p>
+          </div>
+          <span class="px-3 py-1 bg-success/10 text-success rounded-full text-xs font-medium">当前</span>
+        </div>
+
+        <!-- 其他设备 -->
+        <div class="bg-white rounded-xl p-4 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">laptop_mac</span>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-on-surface">MacBook Pro</h4>
+            <p class="text-sm text-on-surface-variant">Chrome浏览器 • 3天前活跃</p>
+          </div>
+          <button onclick="removeDevice(this)" class="px-3 py-1 bg-error/10 text-error rounded-full text-xs font-medium hover:bg-error hover:text-white transition-all">移除</button>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">tablet_mac</span>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-semibold text-on-surface">iPad Pro</h4>
+            <p class="text-sm text-on-surface-variant">Safari浏览器 • 1周前活跃</p>
+          </div>
+          <button onclick="removeDevice(this)" class="px-3 py-1 bg-error/10 text-error rounded-full text-xs font-medium hover:bg-error hover:text-white transition-all">移除</button>
+        </div>
+      </div>
+
+      <button class="w-full mt-6 py-3 rounded-full border border-primary text-primary font-semibold flex items-center justify-center gap-2 transition-all hover:bg-primary-container" onclick="hideDevicesModal()">
+        <span class="material-symbols-outlined">close</span>
+        <span>关闭</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 登录活动弹窗 -->
+  <div id="loginHistoryModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideLoginHistoryModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 class="text-xl font-semibold text-center mb-6">登录活动</h3>
+
+      <div class="space-y-4">
+        <div class="bg-white rounded-xl p-4">
+          <div class="flex items-center gap-4 mb-3">
+            <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-success text-sm">check_circle</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-semibold text-on-surface text-sm">登录成功</h4>
+              <p class="text-xs text-on-surface-variant">iPhone 14 Pro • iOS</p>
+            </div>
+          </div>
+          <p class="text-xs text-on-surface-variant pl-14">今天 09:30</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-4">
+          <div class="flex items-center gap-4 mb-3">
+            <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-success text-sm">check_circle</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-semibold text-on-surface text-sm">登录成功</h4>
+              <p class="text-xs text-on-surface-variant">MacBook Pro • macOS</p>
+            </div>
+          </div>
+          <p class="text-xs text-on-surface-variant pl-14">昨天 14:22</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-4">
+          <div class="flex items-center gap-4 mb-3">
+            <div class="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-warning text-sm">warning</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-semibold text-on-surface text-sm">异地登录提示</h4>
+              <p class="text-xs text-on-surface-variant">深圳市 • 广东</p>
+            </div>
+          </div>
+          <p class="text-xs text-on-surface-variant pl-14">7月1日 03:15</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-4">
+          <div class="flex items-center gap-4 mb-3">
+            <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-success text-sm">check_circle</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-semibold text-on-surface text-sm">登录成功</h4>
+              <p class="text-xs text-on-surface-variant">iPad Pro • iPadOS</p>
+            </div>
+          </div>
+          <p class="text-xs text-on-surface-variant pl-14">6月28日 20:05</p>
+        </div>
+      </div>
+
+      <button class="w-full mt-6 py-3 rounded-full border border-primary text-primary font-semibold flex items-center justify-center gap-2 transition-all hover:bg-primary-container" onclick="hideLoginHistoryModal()">
+        <span class="material-symbols-outlined">close</span>
+        <span>关闭</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentType = 'expense';
+    let selectedCategory = null;
+
+    // 默认用户信息
+    const defaultUserInfo = {
+      name: '林清怡 (Claire)',
+      email: 'premium@account.com',
+      avatar: '👤'
+    };
+
+    // 头像列表
+    const avatarList = ['👤', '👧', '👨', '👩', '🧑', '👴', '👵', '🧔', '👱', '🤵', '👰', '🎅', '🦸', '🧙', '🧚', '🧛', '🧜', '🧝', '🐱', '🐶', '🐰', '🦊', '🐼', '🐨', '🐯', '🦁', '🐸', '🐵', '🦄', '🐷', '🐮', '🐻'];
+
+    // 用户信息弹窗相关变量
+    let selectedAvatar = '👤';
+    let isCustomImage = false;
+
+    // 分类弹窗相关变量
+    let currentCatType = 'expense';
+    let selectedEmoji = '🍜';
+    let categoryToDelete = null;
+
+    // 默认分类数据
+    const defaultExpenseCategories = [
+      { id: 'catering', emoji: '🍜', name: '餐饮' },
+      { id: 'transport', emoji: '🚗', name: '交通' },
+      { id: 'shopping', emoji: '🛒', name: '购物' },
+      { id: 'entertainment', emoji: '🎬', name: '娱乐' },
+      { id: 'housing', emoji: '🏠', name: '住房' },
+      { id: 'medical', emoji: '💊', name: '医疗' },
+      { id: 'education', emoji: '📚', name: '教育' },
+      { id: 'others', emoji: '📦', name: '其他' }
+    ];
+
+    const defaultIncomeCategories = [
+      { id: 'salary', emoji: '💰', name: '工资' },
+      { id: 'bonus', emoji: '🎁', name: '奖金' },
+      { id: 'investment', emoji: '📈', name: '投资' },
+      { id: 'gift', emoji: '🎀', name: '礼金' },
+      { id: 'others', emoji: '📦', name: '其他' }
+    ];
+
+    // 常用Emoji列表
+    const emojiList = ['🍜', '🚗', '🛒', '🎬', '🏠', '💊', '📚', '📦', '💰', '🎁', '📈', '🎀', '🍕', '☕', '🎮', '🎵', '✈️', '🏋️', '👗', '💄', '🎁', '🏠', '💻', '📱', '🎯', '⚽', '🎨', '🌸', '🌟', '🔥', '❤️', '🌈', '🍀', '🌙', '☀️', '🌺'];
+
+    // 初始化
+    function init() {
+      renderCategories();
+      loadUserInfo();
+    }
+
+    // 从LocalStorage获取用户信息
+    function getUserInfo() {
+      const stored = localStorage.getItem('userInfo');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+      return { ...defaultUserInfo };
+    }
+
+    // 保存用户信息到LocalStorage
+    function saveUserInfoToStorage(userInfo) {
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    }
+
+    // 加载用户信息
+    function loadUserInfo() {
+      const userInfo = getUserInfo();
+      document.getElementById('userName').textContent = userInfo.name;
+      document.getElementById('userEmail').textContent = userInfo.email;
+
+      if (userInfo.isCustomImage && userInfo.avatarData) {
+        document.getElementById('userAvatar').innerHTML = `<img src="${userInfo.avatarData}" class="w-full h-full object-cover rounded-full">`;
+      } else {
+        document.getElementById('userAvatar').innerHTML = userInfo.avatar;
+      }
+    }
+
+    // 显示用户信息编辑弹窗
+    function showUserInfoModal() {
+      const userInfo = getUserInfo();
+      selectedAvatar = userInfo.avatar;
+      isCustomImage = userInfo.isCustomImage || false;
+      document.getElementById('userNameInput').value = userInfo.name;
+      document.getElementById('userEmailInput').value = userInfo.email;
+
+      if (isCustomImage && userInfo.avatarData) {
+        document.getElementById('avatarPreview').innerHTML = `<img src="${userInfo.avatarData}" class="w-full h-full object-cover">`;
+      } else {
+        document.getElementById('avatarPreview').innerHTML = `<span id="selectedAvatar">${userInfo.avatar}</span>`;
+      }
+
+      renderAvatarGrid();
+      document.getElementById('userInfoModal').classList.remove('hidden');
+    }
+
+    // 隐藏用户信息编辑弹窗
+    function hideUserInfoModal() {
+      document.getElementById('userInfoModal').classList.add('hidden');
+    }
+
+    // 修改密码弹窗
+    function showPasswordModal() {
+      document.getElementById('passwordModal').classList.remove('hidden');
+      document.getElementById('oldPasswordInput').value = '';
+      document.getElementById('newPasswordInput').value = '';
+      document.getElementById('confirmPasswordInput').value = '';
+    }
+
+    function hidePasswordModal() {
+      document.getElementById('passwordModal').classList.add('hidden');
+    }
+
+    function savePassword() {
+      const oldPwd = document.getElementById('oldPasswordInput').value;
+      const newPwd = document.getElementById('newPasswordInput').value;
+      const confirmPwd = document.getElementById('confirmPasswordInput').value;
+
+      if (!oldPwd || !newPwd || !confirmPwd) {
+        alert('请填写所有密码字段');
+        return;
+      }
+
+      if (newPwd !== confirmPwd) {
+        alert('新密码两次输入不一致');
+        return;
+      }
+
+      if (newPwd.length < 6) {
+        alert('新密码长度不能少于6位');
+        return;
+      }
+
+      // 保存密码修改时间
+      localStorage.setItem('passwordLastChanged', new Date().toISOString());
+      hidePasswordModal();
+      alert('密码修改成功！');
+    }
+
+    // 管理受信任设备弹窗
+    function showDevicesModal() {
+      document.getElementById('devicesModal').classList.remove('hidden');
+    }
+
+    function hideDevicesModal() {
+      document.getElementById('devicesModal').classList.add('hidden');
+    }
+
+    function removeDevice(btn) {
+      if (confirm('确定要移除该设备吗？移除后需要重新登录。')) {
+        const deviceCard = btn.closest('.bg-white');
+        deviceCard.style.opacity = '0.5';
+        btn.disabled = true;
+        btn.textContent = '已移除';
+        alert('设备已移除');
+      }
+    }
+
+    // 登录活动弹窗
+    function showLoginHistoryModal() {
+      document.getElementById('loginHistoryModal').classList.remove('hidden');
+    }
+
+    function hideLoginHistoryModal() {
+      document.getElementById('loginHistoryModal').classList.add('hidden');
+    }
+
+    // 渲染头像选择网格
+    function renderAvatarGrid() {
+      const avatarGrid = document.getElementById('avatarGrid');
+      avatarGrid.innerHTML = avatarList.map(avatar => `
+        <button onclick="selectAvatar('${avatar}')" class="w-12 h-12 rounded-full hover:bg-surface-container-high transition-all flex items-center justify-center text-2xl ${selectedAvatar === avatar ? 'bg-primary-container ring-2 ring-primary' : ''}">
+          ${avatar}
+        </button>
+      `).join('');
+    }
+
+    // 选择头像
+    function selectAvatar(avatar) {
+      selectedAvatar = avatar;
+      isCustomImage = false;
+      document.getElementById('avatarPreview').innerHTML = `<span id="selectedAvatar">${avatar}</span>`;
+      renderAvatarGrid();
+    }
+
+    // 处理头像上传
+    function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert('请选择图片文件');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedAvatar = e.target.result;
+        isCustomImage = true;
+        document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 保存用户信息
+    function saveUserInfo() {
+      const name = document.getElementById('userNameInput').value.trim();
+      const email = document.getElementById('userEmailInput').value.trim();
+
+      if (!name) {
+        alert('请输入用户名');
+        return;
+      }
+
+      if (!email) {
+        alert('请输入邮箱');
+        return;
+      }
+
+      const userInfo = {
+        name: name,
+        email: email,
+        avatar: selectedAvatar,
+        isCustomImage: isCustomImage,
+        avatarData: isCustomImage ? selectedAvatar : null
+      };
+
+      saveUserInfoToStorage(userInfo);
+      loadUserInfo();
+      hideUserInfoModal();
+    }
+
+    // 从LocalStorage获取分类
+    function getCategories() {
+      const stored = localStorage.getItem('customCategories');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+      return { expense: [], income: [] };
+    }
+
+    // 保存分类到LocalStorage
+    function saveCategories(categories) {
+      localStorage.setItem('customCategories', JSON.stringify(categories));
+    }
+
+    // 获取所有支出分类（默认 + 自定义）
+    function getAllExpenseCategories() {
+      const custom = getCategories();
+      return [...defaultExpenseCategories, ...custom.expense];
+    }
+
+    // 获取所有收入分类（默认 + 自定义）
+    function getAllIncomeCategories() {
+      const custom = getCategories();
+      return [...defaultIncomeCategories, ...custom.income];
+    }
+
+    // 渲染分类
+    function renderCategories() {
+      const expenseContainer = document.getElementById('expenseCategories');
+      const incomeContainer = document.getElementById('incomeCategories');
+
+      const expenseCats = getAllExpenseCategories();
+      const incomeCats = getAllIncomeCategories();
+
+      expenseContainer.innerHTML = expenseCats.map(cat => `
+        <div class="bg-white rounded-xl p-4 flex items-center gap-3 hover:shadow-md transition-all relative group">
+          <span class="text-2xl">${cat.emoji}</span>
+          <span class="font-medium text-on-surface">${cat.name}</span>
+          <button onclick="showDeleteModal('${cat.id}', '${cat.name}', 'expense')" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-error/10 text-error opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-error hover:text-white">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      `).join('');
+
+      incomeContainer.innerHTML = incomeCats.map(cat => `
+        <div class="bg-white rounded-xl p-4 flex items-center gap-3 hover:shadow-md transition-all relative group">
+          <span class="text-2xl">${cat.emoji}</span>
+          <span class="font-medium text-on-surface">${cat.name}</span>
+          <button onclick="showDeleteModal('${cat.id}', '${cat.name}', 'income')" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-error/10 text-error opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-error hover:text-white">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // 显示添加分类弹窗
+    function showCategoryModal() {
+      document.getElementById('categoryModal').classList.remove('hidden');
+      renderEmojiGrid();
+    }
+
+    // 隐藏添加分类弹窗
+    function hideCategoryModal() {
+      document.getElementById('categoryModal').classList.add('hidden');
+      document.getElementById('categoryNameInput').value = '';
+      selectedEmoji = '🍜';
+      document.getElementById('selectedEmoji').textContent = '🍜';
+    }
+
+    // 切换分类类型
+    function switchCatType(type) {
+      currentCatType = type;
+      const tabExpense = document.getElementById('catTypeExpense');
+      const tabIncome = document.getElementById('catTypeIncome');
+
+      if (type === 'expense') {
+        tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
+        tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
+      } else {
+        tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
+        tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
+      }
+    }
+
+    // 渲染Emoji选择网格
+    function renderEmojiGrid() {
+      const emojiGrid = document.getElementById('emojiGrid');
+      emojiGrid.innerHTML = emojiList.map(emoji => `
+        <button onclick="selectEmoji('${emoji}')" class="w-10 h-10 rounded-lg hover:bg-surface-container-high transition-all flex items-center justify-center text-xl ${selectedEmoji === emoji ? 'bg-primary-container ring-2 ring-primary' : ''}">
+          ${emoji}
+        </button>
+      `).join('');
+    }
+
+    // 选择Emoji
+    function selectEmoji(emoji) {
+      selectedEmoji = emoji;
+      document.getElementById('selectedEmoji').textContent = emoji;
+      renderEmojiGrid();
+    }
+
+    // 随机Emoji
+    function randomEmoji() {
+      const randomIndex = Math.floor(Math.random() * emojiList.length);
+      selectEmoji(emojiList[randomIndex]);
+    }
+
+    // 添加分类
+    function addCategory() {
+      const name = document.getElementById('categoryNameInput').value.trim();
+
+      if (!name) {
+        alert('请输入分类名称');
+        return;
+      }
+
+      const categories = getCategories();
+      const newCategory = {
+        id: 'custom_' + Date.now(),
+        emoji: selectedEmoji,
+        name: name
+      };
+
+      categories[currentCatType].push(newCategory);
+      saveCategories(categories);
+
+      hideCategoryModal();
+      renderCategories();
+    }
+
+    // 显示删除确认弹窗
+    function showDeleteModal(catId, catName, type) {
+      // 检查是否是默认分类
+      const defaultExpenseIds = defaultExpenseCategories.map(c => c.id);
+      const defaultIncomeIds = defaultIncomeCategories.map(c => c.id);
+
+      if ((type === 'expense' && defaultExpenseIds.includes(catId)) ||
+          (type === 'income' && defaultIncomeIds.includes(catId))) {
+        alert('默认分类不能删除');
+        return;
+      }
+
+      categoryToDelete = { id: catId, type: type };
+      document.getElementById('deleteCategoryName').textContent = `确定要删除分类"${catName}"吗？`;
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    // 隐藏删除弹窗
+    function hideDeleteModal() {
+      document.getElementById('deleteModal').classList.add('hidden');
+      categoryToDelete = null;
+    }
+
+    // 确认删除
+    function confirmDelete() {
+      if (!categoryToDelete) return;
+
+      const categories = getCategories();
+      categories[categoryToDelete.type] = categories[categoryToDelete.type].filter(c => c.id !== categoryToDelete.id);
+      saveCategories(categories);
+
+      hideDeleteModal();
+      renderCategories();
+    }
+
+    // 记一笔弹窗相关函数
+    function showAddModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+      resetForm();
+    }
+
+    function hideAddModal() {
+      document.getElementById('addModal').classList.add('hidden');
+    }
+
+    function resetForm() {
+      document.getElementById('amountInput').value = '';
+      document.getElementById('noteInput').value = '';
+      selectedCategory = null;
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
+      });
+    }
+
+    function switchTab(type) {
+      currentType = type;
+      const tabExpense = document.getElementById('tabExpense');
+      const tabIncome = document.getElementById('tabIncome');
+      const categoryGrid = document.getElementById('categoryGrid');
+
+      if (type === 'expense') {
+        tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
+        tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
+        categoryGrid.innerHTML = getAllExpenseCategories().map(cat => `
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="${cat.id}" onclick="selectCategory(this, '${cat.id}')">
+            <span class="text-2xl">${cat.emoji}</span>
+            <span class="text-xs">${cat.name}</span>
+          </button>
+        `).join('');
+      } else {
+        tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
+        tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
+        categoryGrid.innerHTML = getAllIncomeCategories().map(cat => `
+          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="${cat.id}" onclick="selectCategory(this, '${cat.id}')">
+            <span class="text-2xl">${cat.emoji}</span>
+            <span class="text-xs">${cat.name}</span>
+          </button>
+        `).join('');
+      }
+      selectedCategory = null;
+    }
+
+    function selectCategory(btn, category) {
+      document.querySelectorAll('.category-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
+      });
+      btn.classList.add('ring-2', 'ring-primary', 'bg-primary-container');
+      selectedCategory = category;
+    }
+
+    function submitRecord() {
+      const amount = parseFloat(document.getElementById('amountInput').value);
+      const note = document.getElementById('noteInput').value.trim();
+
+      if (!amount || amount <= 0) {
+        alert('请输入有效金额');
+        return;
+      }
+
+      if (!selectedCategory) {
+        alert('请选择分类');
+        return;
+      }
+
+      const record = {
+        id: Date.now(),
+        type: currentType,
+        category: selectedCategory,
+        amount: currentType === 'expense' ? -amount : amount,
+        note: note || (currentType === 'expense' ? '支出' : '收入'),
+        date: new Date().toISOString()
+      };
+
+      const records = JSON.parse(localStorage.getItem('records') || '[]');
+      records.unshift(record);
+      localStorage.setItem('records', JSON.stringify(records));
+
+      hideAddModal();
+      window.location.reload();
+    }
+
+    // 页面加载时初始化
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的账本 - 财务管理</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B88;
+            --primary-light: #FFB4C2;
+            --accent: #4ECDC4;
+            --bg: #FFF5F7;
+            --bg-card: #FFFFFF;
+            --text: #2D3436;
+            --text-light: #636E72;
+            --danger: #FF6B6B;
+            --border: rgba(255, 107, 136, 0.2);
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            max-width: 430px;
+            margin: 0 auto;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 认证页面 */
+        .auth-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-logo {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .auth-form {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--primary);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .auth-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(255, 107, 136, 0.3);
+        }
+
+        .auth-btn:active {
+            transform: scale(0.98);
+        }
+
+        .auth-link {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .auth-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-error {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        .header-actions span {
+            cursor: pointer;
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+            z-index: 150;
+            min-width: 150px;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg);
+        }
+
+        .dropdown-item.danger {
+            color: var(--danger);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+        }
+
+        .today-summary {
+            text-align: center;
+        }
+
+        .today-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .today-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 内容区域 */
+        .content {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* 快捷记账按钮 */
+        .quick-add {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(255, 107, 136, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .quick-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(255, 107, 136, 0.15);
+        }
+
+        .quick-add-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quick-add-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        .quick-add-text {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .quick-add-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .quick-add-arrow {
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        /* 分类概览 */
+        .category-overview {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(255, 107, 136, 0.1);
+        }
+
+        .category-overview-title {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .category-amount {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .category-percent {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 最近记录 */
+        .recent-records {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(255, 107, 136, 0.1);
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title-more {
+            font-size: 0.8rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .record-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-right: 12px;
+        }
+
+        .record-info {
+            flex: 1;
+        }
+
+        .record-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .record-remark {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .record-amount {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--danger);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 0.9rem;
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 107, 136, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* 记账弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 200;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 430px;
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        /* 金额输入 */
+        .amount-input-wrapper {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .amount-currency {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-right: 4px;
+        }
+
+        .amount-input {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text);
+            border: none;
+            background: transparent;
+            text-align: center;
+            width: 200px;
+            font-variant-numeric: tabular-nums;
+            outline: none;
+        }
+
+        .amount-input::placeholder {
+            color: #ccc;
+        }
+
+        /* 分类选择 */
+        .category-select-title {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .category-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .category-option:hover {
+            background: var(--bg);
+        }
+
+        .category-option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 107, 136, 0.1);
+        }
+
+        .category-option-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .category-option-name {
+            font-size: 0.75rem;
+            color: var(--text);
+        }
+
+        /* 备注输入 */
+        .remark-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .remark-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* 保存按钮 */
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .save-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(255, 107, 136, 0.3);
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 记录页 */
+        .date-group {
+            margin-bottom: 20px;
+        }
+
+        .date-group-title {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .date-group-cards {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(255, 107, 136, 0.1);
+        }
+
+        .record-item-full {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .record-item-full:last-child {
+            border-bottom: none;
+        }
+
+        .delete-btn {
+            color: var(--danger);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        /* 统计页 */
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(255, 107, 136, 0.1);
+        }
+
+        .stat-card-title {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-card-sub {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 20px 0;
+        }
+
+        .chart-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-bar {
+            width: 30px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 6px 6px 0 0;
+            transition: height 0.5s ease;
+        }
+
+        .chart-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .chart-amount {
+            font-size: 0.65rem;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 饼图 */
+        .pie-chart-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .pie-chart {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .pie-legend {
+            flex: 1;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-text {
+            font-size: 0.8rem;
+            flex: 1;
+        }
+
+        .legend-percent {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--text);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 空状态 */
+        .page-empty {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .page-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .page-empty-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* 隐藏 */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页 -->
+    <div class="auth-page" id="loginPage">
+        <div class="auth-logo">🍀</div>
+        <div class="auth-title">我的账本</div>
+        <form class="auth-form" onsubmit="handleLogin(event)">
+            <input type="text" class="auth-input" id="loginUsername" placeholder="用户名" required>
+            <input type="password" class="auth-input" id="loginPassword" placeholder="密码" required>
+            <div class="auth-error" id="loginError"></div>
+            <button type="submit" class="auth-btn">登录</button>
+            <div class="auth-link">还没有账号？<a href="#" onclick="showRegister()">注册</a></div>
+        </form>
+    </div>
+
+    <!-- 注册页 -->
+    <div class="auth-page hidden" id="registerPage">
+        <div class="auth-logo">🍀</div>
+        <div class="auth-title">我的账本</div>
+        <form class="auth-form" onsubmit="handleRegister(event)">
+            <input type="text" class="auth-input" id="regUsername" placeholder="用户名（4-20位字母或数字）" required pattern="[a-zA-Z0-9]{4,20}">
+            <input type="password" class="auth-input" id="regPassword" placeholder="密码（6位以上）" required minlength="6">
+            <input type="password" class="auth-input" id="regConfirmPassword" placeholder="确认密码" required>
+            <div class="auth-error" id="regError"></div>
+            <button type="submit" class="auth-btn">注册</button>
+            <div class="auth-link">已有账号？<a href="#" onclick="showLogin()">登录</a></div>
+        </form>
+    </div>
+
+    <!-- 主应用 -->
+    <div id="mainApp" class="hidden">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-top">
+                <div class="header-title">🍀 我的账本</div>
+                <div class="header-actions">
+                    <div class="user-avatar" id="userAvatar" onclick="toggleDropdown()">👤</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item" onclick="showChangePassword()">修改密码</div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="handleLogout()">退出登录</div>
+                    </div>
+                </div>
+            </div>
+            <div class="today-summary">
+                <div class="today-label">今日消费</div>
+                <div class="today-amount">¥<span id="todayAmount">0.00</span></div>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 首页 -->
+            <div class="page active" id="pageHome">
+                <div class="quick-add" onclick="openModal()">
+                    <div class="quick-add-left">
+                        <div class="quick-add-icon">+</div>
+                        <div>
+                            <div class="quick-add-text">记一笔</div>
+                            <div class="quick-add-hint">快速记录消费</div>
+                        </div>
+                    </div>
+                    <div class="quick-add-arrow">›</div>
+                </div>
+
+                <div class="category-overview" id="categoryOverview">
+                    <div class="category-overview-title">今日分类</div>
+                    <div class="category-list" id="categoryList"></div>
+                </div>
+
+                <div class="recent-records">
+                    <div class="section-title">
+                        最近记录
+                        <span class="section-title-more" onclick="switchTab('records')">查看全部</span>
+                    </div>
+                    <div id="recentRecords"></div>
+                </div>
+            </div>
+
+            <!-- 记录页 -->
+            <div class="page" id="pageRecords">
+                <div id="recordsList"></div>
+            </div>
+
+            <!-- 统计页 -->
+            <div class="page" id="pageStats">
+                <div class="stat-card">
+                    <div class="stat-card-title">本月消费</div>
+                    <div class="stat-card-value">¥<span id="monthTotal">0.00</span></div>
+                    <div class="stat-card-sub">日均 ¥<span id="dailyAvg">0.00</span></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-title">近7天趋势</div>
+                    <div class="chart-container" id="trendChart"></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-title">分类占比</div>
+                    <div class="pie-chart-container" id="pieChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">首页</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('records')">
+                <span class="nav-icon">📝</span>
+                <span class="nav-label">记录</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('stats')">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">统计</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 记账弹窗 -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnOverlay(event)">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title">记一笔</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+
+            <div class="amount-input-wrapper">
+                <span class="amount-currency">¥</span>
+                <input type="number" class="amount-input" id="amountInput" placeholder="0.00" step="0.01" min="0">
+            </div>
+
+            <div class="category-select-title">选择分类</div>
+            <div class="category-grid" id="categoryGrid"></div>
+
+            <input type="text" class="remark-input" id="remarkInput" placeholder="添加备注（可选）">
+
+            <button class="save-btn" onclick="saveRecord()">保存</button>
+        </div>
+    </div>
+
+    <!-- 修改密码弹窗 -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <div class="modal-title">修改密码</div>
+                <div class="modal-close" onclick="closePasswordModal()">✕</div>
+            </div>
+
+            <input type="password" class="auth-input" id="oldPassword" placeholder="原密码">
+            <input type="password" class="auth-input" id="newPassword" placeholder="新密码（6位以上）">
+            <input type="password" class="auth-input" id="confirmNewPassword" placeholder="确认新密码">
+            <div class="auth-error" id="passwordError"></div>
+            <button class="save-btn" onclick="handleChangePassword()">确认修改</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">保存成功</div>
+
+    <script>
+        // 分类定义
+        const CATEGORIES = [
+            { id: 'food', name: '餐饮', icon: '🍜', color: '#FF6B6B' },
+            { id: 'transport', name: '交通', icon: '🚗', color: '#4ECDC4' },
+            { id: 'shopping', name: '购物', icon: '🛒', color: '#FFE66D' },
+            { id: 'entertainment', name: '娱乐', icon: '🎮', color: '#95E1D3' },
+            { id: 'housing', name: '居住', icon: '🏠', color: '#F38181' },
+            { id: 'medical', name: '医疗', icon: '💊', color: '#AA96DA' },
+            { id: 'education', name: '教育', icon: '📚', color: '#FCBAD3' },
+            { id: 'other', name: '其他', icon: '•••', color: '#A8D8EA' }
+        ];
+
+        const USERS_KEY = 'finance_users';
+        const CURRENT_USER_KEY = 'current_user';
+        const LOGIN_EXPIRY_DAYS = 7;
+
+        let records = [];
+        let selectedCategory = null;
+        let currentTab = 'home';
+        let currentUser = null;
+
+        // 初始化
+        function init() {
+            checkLoginStatus();
+            renderCategoryGrid();
+        }
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const savedUser = localStorage.getItem(CURRENT_USER_KEY);
+            if (savedUser) {
+                const userData = JSON.parse(savedUser);
+                const expiry = userData.expiry;
+                if (expiry && new Date(expiry) > new Date()) {
+                    currentUser = userData;
+                    showMainApp();
+                    loadRecords();
+                    renderHomePage();
+                    updateTodayAmount();
+                    return;
+                } else {
+                    localStorage.removeItem(CURRENT_USER_KEY);
+                }
+            }
+            showLoginPage();
+        }
+
+        // 显示登录页
+        function showLoginPage() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        // 显示注册页
+        function showRegisterPage() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        // 显示主应用
+        function showMainApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+        }
+
+        // 切换到登录
+        function showLogin() {
+            document.getElementById('regError').textContent = '';
+            showLoginPage();
+        }
+
+        // 切换到注册
+        function showRegister() {
+            document.getElementById('loginError').textContent = '';
+            showRegisterPage();
+        }
+
+        // 获取所有用户
+        function getUsers() {
+            const data = localStorage.getItem(USERS_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+
+        // 保存用户
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+
+        // 简单加密（实际使用应使用更安全的方式）
+        function hashPassword(password) {
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash.toString(16);
+        }
+
+        // 处理登录
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.textContent = '';
+
+            if (!username || !password) {
+                errorEl.textContent = '请输入用户名和密码';
+                return;
+            }
+
+            const users = getUsers();
+            const user = users.find(u => u.username === username);
+
+            if (!user) {
+                errorEl.textContent = '用户名不存在';
+                return;
+            }
+
+            if (user.password !== hashPassword(password)) {
+                errorEl.textContent = '密码错误';
+                return;
+            }
+
+            // 保存登录状态
+            const expiry = new Date();
+            expiry.setDate(expiry.getDate() + LOGIN_EXPIRY_DAYS);
+
+            currentUser = {
+                id: user.id,
+                username: user.username,
+                expiry: expiry.toISOString()
+            };
+
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+
+            showMainApp();
+            loadRecords();
+            renderHomePage();
+            updateTodayAmount();
+            showToast('登录成功');
+        }
+
+        // 处理注册
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const errorEl = document.getElementById('regError');
+
+            errorEl.textContent = '';
+
+            // 验证用户名
+            if (!/^[a-zA-Z0-9]{4,20}$/.test(username)) {
+                errorEl.textContent = '用户名需为4-20位字母或数字';
+                return;
+            }
+
+            // 验证密码
+            if (password.length < 6) {
+                errorEl.textContent = '密码需6位以上';
+                return;
+            }
+
+            // 验证确认密码
+            if (password !== confirmPassword) {
+                errorEl.textContent = '两次密码输入不一致';
+                return;
+            }
+
+            const users = getUsers();
+
+            // 检查用户名是否已存在
+            if (users.find(u => u.username === username)) {
+                errorEl.textContent = '用户名已存在';
+                return;
+            }
+
+            // 创建新用户
+            const newUser = {
+                id: Date.now().toString(),
+                username: username,
+                password: hashPassword(password),
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            saveUsers(users);
+
+            // 清空注册表单
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regConfirmPassword').value = '';
+
+            // 跳转到登录页
+            showLoginPage();
+            showToast('注册成功，请登录');
+        }
+
+        // 处理登出
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem(CURRENT_USER_KEY);
+            closeDropdown();
+            records = [];
+            showLoginPage();
+            showToast('已退出登录');
+        }
+
+        // 切换下拉菜单
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // 点击其他地方关闭下拉菜单
+        document.addEventListener('click', function(e) {
+            const avatar = document.getElementById('userAvatar');
+            const dropdown = document.getElementById('userDropdown');
+            if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // 显示修改密码弹窗
+        function showChangePassword() {
+            closeDropdown();
+            document.getElementById('passwordModal').classList.add('active');
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+            document.getElementById('passwordError').textContent = '';
+        }
+
+        // 关闭修改密码弹窗
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+        }
+
+        // 处理修改密码
+        function handleChangePassword() {
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+            const errorEl = document.getElementById('passwordError');
+
+            errorEl.textContent = '';
+
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                errorEl.textContent = '请填写所有字段';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                errorEl.textContent = '新密码需6位以上';
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                errorEl.textContent = '两次新密码输入不一致';
+                return;
+            }
+
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+
+            if (userIndex === -1) {
+                errorEl.textContent = '用户不存在';
+                return;
+            }
+
+            if (users[userIndex].password !== hashPassword(oldPassword)) {
+                errorEl.textContent = '原密码错误';
+                return;
+            }
+
+            users[userIndex].password = hashPassword(newPassword);
+            saveUsers(users);
+
+            closePasswordModal();
+            showToast('密码修改成功');
+        }
+
+        // 获取用户记录存储键
+        function getRecordsKey() {
+            return 'finance_records_' + currentUser.id;
+        }
+
+        // 加载记录
+        function loadRecords() {
+            const data = localStorage.getItem(getRecordsKey());
+            records = data ? JSON.parse(data) : [];
+        }
+
+        // 保存记录
+        function saveRecords() {
+            localStorage.setItem(getRecordsKey(), JSON.stringify(records));
+        }
+
+        // 渲染分类选择网格
+        function renderCategoryGrid() {
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = CATEGORIES.map(cat => `
+                <div class="category-option" data-id="${cat.id}" onclick="selectCategory('${cat.id}')">
+                    <div class="category-option-icon" style="background: ${cat.color}20; color: ${cat.color}">${cat.icon}</div>
+                    <div class="category-option-name">${cat.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // 选择分类
+        function selectCategory(id) {
+            selectedCategory = id;
+            document.querySelectorAll('.category-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.id === id);
+            });
+        }
+
+        // 打开弹窗
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('amountInput').focus();
+            selectedCategory = null;
+            document.querySelectorAll('.category-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('amountInput').value = '';
+            document.getElementById('remarkInput').value = '';
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // 点击遮罩关闭
+        function closeModalOnOverlay(e) {
+            if (e.target === document.getElementById('modalOverlay')) {
+                closeModal();
+            }
+        }
+
+        // 保存记录
+        function saveRecord() {
+            const amount = parseFloat(document.getElementById('amountInput').value);
+            const remark = document.getElementById('remarkInput').value.trim();
+
+            if (!amount || amount <= 0) {
+                showToast('请输入有效金额');
+                return;
+            }
+
+            if (!selectedCategory) {
+                showToast('请选择分类');
+                return;
+            }
+
+            const category = CATEGORIES.find(c => c.id === selectedCategory);
+            const record = {
+                id: Date.now().toString(),
+                userId: currentUser.id,
+                amount: amount,
+                category: selectedCategory,
+                categoryName: category.name,
+                categoryIcon: category.icon,
+                categoryColor: category.color,
+                remark: remark,
+                createdAt: new Date().toISOString()
+            };
+
+            records.unshift(record);
+            saveRecords();
+            closeModal();
+            showToast('保存成功');
+            renderHomePage();
+            renderRecordsPage();
+            renderStatsPage();
+            updateTodayAmount();
+        }
+
+        // 删除记录
+        function deleteRecord(id) {
+            records = records.filter(r => r.id !== id);
+            saveRecords();
+            renderHomePage();
+            renderRecordsPage();
+            renderStatsPage();
+            updateTodayAmount();
+            showToast('已删除');
+        }
+
+        // 显示 Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // 切换标签页
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById('page' + capitalize(tab)).classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            if (tab === 'records') renderRecordsPage();
+            if (tab === 'stats') renderStatsPage();
+        }
+
+        function capitalize(s) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        // 更新今日金额
+        function updateTodayAmount() {
+            const today = new Date().toDateString();
+            const todayRecords = records.filter(r => new Date(r.createdAt).toDateString() === today);
+            const total = todayRecords.reduce((sum, r) => sum + r.amount, 0);
+            document.getElementById('todayAmount').textContent = total.toFixed(2);
+        }
+
+        // 渲染首页
+        function renderHomePage() {
+            renderCategoryOverview();
+            renderRecentRecords();
+        }
+
+        // 渲染分类概览
+        function renderCategoryOverview() {
+            const today = new Date().toDateString();
+            const todayRecords = records.filter(r => new Date(r.createdAt).toDateString() === today);
+
+            const categoryTotals = {};
+            todayRecords.forEach(r => {
+                categoryTotals[r.category] = (categoryTotals[r.category] || 0) + r.amount;
+            });
+
+            const sorted = Object.entries(categoryTotals)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3);
+
+            const list = document.getElementById('categoryList');
+
+            if (sorted.length === 0) {
+                list.innerHTML = '<div class="empty-state-text" style="text-align:center;padding:10px;color:var(--text-light)">今日暂无消费</div>';
+                return;
+            }
+
+            const total = sorted.reduce((sum, [, amt]) => sum + amt, 0);
+
+            list.innerHTML = sorted.map(([catId, amount]) => {
+                const cat = CATEGORIES.find(c => c.id === catId);
+                const percent = total > 0 ? Math.round(amount / total * 100) : 0;
+                return `
+                    <div class="category-item">
+                        <div class="category-icon" style="background: ${cat.color}20; color: ${cat.color}">${cat.icon}</div>
+                        <div class="category-info">
+                            <div class="category-name">${cat.name}</div>
+                            <div class="category-amount">¥${amount.toFixed(2)}</div>
+                        </div>
+                        <div class="category-percent">${percent}%</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 渲染最近记录
+        function renderRecentRecords() {
+            const container = document.getElementById('recentRecords');
+            const recent = records.slice(0, 5);
+
+            if (recent.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">暂无记录，点点"记一笔"开始吧</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recent.map(r => `
+                <div class="record-item">
+                    <div class="record-icon" style="background: ${r.categoryColor}20; color: ${r.categoryColor}">${r.categoryIcon}</div>
+                    <div class="record-info">
+                        <div class="record-title">${r.categoryName}</div>
+                        ${r.remark ? `<div class="record-remark">${r.remark}</div>` : ''}
+                    </div>
+                    <div class="record-amount">-¥${r.amount.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        // 渲染记录页
+        function renderRecordsPage() {
+            const container = document.getElementById('recordsList');
+
+            if (records.length === 0) {
+                container.innerHTML = `
+                    <div class="page-empty">
+                        <div class="page-empty-icon">📝</div>
+                        <div class="page-empty-text">暂无记录</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 按日期分组
+            const groups = {};
+            records.forEach(r => {
+                const date = new Date(r.createdAt).toDateString();
+                if (!groups[date]) groups[date] = [];
+                groups[date].push(r);
+            });
+
+            container.innerHTML = Object.entries(groups).map(([date, items]) => {
+                const dateStr = formatDate(date);
+                const dayTotal = items.reduce((sum, r) => sum + r.amount, 0);
+                return `
+                    <div class="date-group">
+                        <div class="date-group-title">${dateStr} · ¥${dayTotal.toFixed(2)}</div>
+                        <div class="date-group-cards">
+                            ${items.map(r => `
+                                <div class="record-item-full">
+                                    <div class="record-icon" style="background: ${r.categoryColor}20; color: ${r.categoryColor}; margin-right: 12px">${r.categoryIcon}</div>
+                                    <div class="record-info" style="flex:1">
+                                        <div class="record-title">${r.categoryName}</div>
+                                        ${r.remark ? `<div class="record-remark">${r.remark}</div>` : ''}
+                                    </div>
+                                    <div class="record-amount" style="margin-right: 12px">-¥${r.amount.toFixed(2)}</div>
+                                    <div class="delete-btn" onclick="deleteRecord('${r.id}')">删除</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 格式化日期
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) return '今天';
+            if (date.toDateString() === yesterday.toDateString()) return '昨天';
+
+            return `${date.getMonth() + 1}月${date.getDate()}日`;
+        }
+
+        // 渲染统计页
+        function renderStatsPage() {
+            renderMonthStats();
+            renderTrendChart();
+            renderPieChart();
+        }
+
+        // 渲染月度统计
+        function renderMonthStats() {
+            const now = new Date();
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthRecords = records.filter(r => new Date(r.createdAt) >= monthStart);
+
+            const total = monthRecords.reduce((sum, r) => sum + r.amount, 0);
+            const days = Math.max(1, now.getDate());
+            const dailyAvg = total / days;
+
+            document.getElementById('monthTotal').textContent = total.toFixed(2);
+            document.getElementById('dailyAvg').textContent = dailyAvg.toFixed(2);
+        }
+
+        // 渲染趋势图
+        function renderTrendChart() {
+            const container = document.getElementById('trendChart');
+            const days = [];
+            const amounts = [];
+
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toDateString();
+                days.push(date.getDate());
+
+                const dayRecords = records.filter(r => new Date(r.createdAt).toDateString() === dateStr);
+                amounts.push(dayRecords.reduce((sum, r) => sum + r.amount, 0));
+            }
+
+            const maxAmount = Math.max(...amounts, 1);
+
+            container.innerHTML = amounts.map((amt, i) => {
+                const height = (amt / maxAmount * 140) + 10;
+                return `
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-amount">${amt > 0 ? '¥' + amt.toFixed(0) : ''}</div>
+                        <div class="chart-bar" style="height: ${height}px"></div>
+                        <div class="chart-label">${days[i]}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 渲染饼图
+        function renderPieChart() {
+            const container = document.getElementById('pieChart');
+            const now = new Date();
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthRecords = records.filter(r => new Date(r.createdAt) >= monthStart);
+
+            if (monthRecords.length === 0) {
+                container.innerHTML = '<div class="empty-state-text" style="flex:1;text-align:center;color:var(--text-light)">本月暂无消费数据</div>';
+                return;
+            }
+
+            const categoryTotals = {};
+            monthRecords.forEach(r => {
+                categoryTotals[r.category] = (categoryTotals[r.category] || 0) + r.amount;
+            });
+
+            const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+            const total = sorted.reduce((sum, [, amt]) => sum + amt, 0);
+
+            // 生成饼图数据
+            let currentAngle = 0;
+            const pieData = sorted.map(([catId, amount]) => {
+                const cat = CATEGORIES.find(c => c.id === catId);
+                const percent = amount / total;
+                const angle = percent * 360;
+                const startAngle = currentAngle;
+                currentAngle += angle;
+                return { cat, amount, percent, startAngle, angle };
+            });
+
+            // 简单的 SVG 饼图
+            const size = 120;
+            const cx = size / 2;
+            const cy = size / 2;
+            const r = size / 2 - 5;
+
+            let paths = '';
+            pieData.forEach((d, i) => {
+                if (d.angle < 1) return;
+                const start = polarToCartesian(cx, cy, r, d.startAngle);
+                const end = polarToCartesian(cx, cy, r, d.startAngle + d.angle - (d.angle > 180 ? 0.5 : 0));
+                const largeArcFlag = d.angle > 180 ? 1 : 0;
+                paths += `<path d="M${cx},${cy} L${start.x},${start.y} A${r},${r} 0 ${largeArcFlag},1 ${end.x},${end.y} Z" fill="${d.cat.color}" />`;
+            });
+
+            container.innerHTML = `
+                <svg class="pie-chart" viewBox="0 0 ${size} ${size}">${paths}</svg>
+                <div class="pie-legend">
+                    ${pieData.slice(0, 4).map(d => `
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: ${d.cat.color}"></div>
+                            <div class="legend-text">${d.cat.icon} ${d.cat.name}</div>
+                            <div class="legend-percent">${Math.round(d.percent * 100)}%</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function polarToCartesian(cx, cy, r, angle) {
+            const rad = (angle - 90) * Math.PI / 180;
+            return {
+                x: cx + r * Math.cos(rad),
+                y: cy + r * Math.sin(rad)
+            };
+        }
+
+        // 启动
+        init();
+    </script>
+</body>
+</html>

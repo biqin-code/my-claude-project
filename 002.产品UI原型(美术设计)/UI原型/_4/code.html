@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>我的账本 - 收支明细</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-variant": "#ebdef1", surface: "#fff7fe", others: "#A8D8EA", "primary-fixed-dim": "#ffb0cf", danger: "#EF4444", "on-tertiary-container": "#634c5c", "on-secondary-fixed-variant": "#4e444c", "secondary-container": "#eedee8", "on-secondary-fixed": "#211920", "on-primary-container": "#833a5c", secondary: "#665b63", transport: "#4ECDC4", "tertiary-fixed-dim": "#dcbed1", "surface-container-low": "#fbf0ff", success: "#10B981", outline: "#81737a", "secondary-fixed": "#eedee8", "on-secondary-container": "#6d6169", catering: "#FF6B6B", "surface-container": "#f7e9fd", housing: "#F38181", "surface-container-high": "#f1e4f7", tertiary: "#6f5767", "on-secondary": "#ffffff", "on-primary-fixed": "#3d0123", background: "#fff7fe", primary: "#904568", "inverse-primary": "#ffb0cf", "surface-container-highest": "#ebdef1", "on-surface-variant": "#4f444a", education: "#FCBAD3", "error-container": "#ffdad6", "tertiary-fixed": "#f9daed", warning: "#F59E0B", "on-background": "#201926", "on-tertiary-fixed-variant": "#56404f", "surface-bright": "#fff7fe", "inverse-on-surface": "#faecff", "on-primary-fixed-variant": "#742e50", "primary-container": "#ffb1d0", error: "#ba1a1a", entertainment: "#95E1D3", "inverse-surface": "#352d3c", "tertiary-container": "#ddbfd2", shopping: "#FFE66D", "on-surface": "#201926", medical: "#AA96DA", "on-tertiary-fixed": "#281623", "surface-container-lowest": "#ffffff", "primary-fixed": "#ffd9e5", "surface-tint": "#904568", "on-primary": "#ffffff", "on-error": "#ffffff", "on-tertiary": "#ffffff", "on-error-container": "#93000a", "secondary-fixed-dim": "#d1c2cc", "surface-dim": "#e3d6e9", "outline-variant": "#d3c2ca"}, borderRadius: {DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"}, spacing: {base: "4px", lg: "24px", xs: "8px", "2xl": "48px", gutter: "20px", xl: "32px", sm: "12px", "container-max": "1200px", md: "16px"}, fontFamily: {"headline-md": ["Inter"], "display-lg": ["Inter"], "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "amount-display": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Inter"]}, fontSize: {"headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "display-lg": ["48px", {lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}], "headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "amount-display": ["36px", {lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700"}]}}}};</script>
+<style>
+        body {
+            background-color: #f4fbf4;
+            color: #161d19;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #bbcabf;
+            border-radius: 10px;
+        }
+        .pull-to-refresh {
+            transition: transform 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 shadow-sm bg-surface dark:bg-surface-dim">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+<div class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">我的账本</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 w-full max-w-container-max mx-auto">
+<!-- SideNavBar -->
+<aside class="h-[calc(100vh-64px)] w-64 sticky top-16 hidden md:flex flex-col bg-surface-container dark:bg-surface-container-highest p-md gap-xs">
+<div class="mb-lg p-sm">
+<div class="flex items-center gap-sm mb-xs">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary">我的账本</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">财务管理系统</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">仪表盘</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm bg-primary-container text-on-primary-container rounded-lg font-semibold transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-body-md text-body-md">收支明细</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md text-body-md">统计报表</span>
+</a>
+</nav>
+<button class="mt-auto w-full bg-primary hover:bg-opacity-90 text-on-primary py-md rounded-xl font-bold flex items-center justify-center gap-xs transition-all active:scale-95 shadow-md">
+<span class="material-symbols-outlined">add</span>
+<span>记一笔</span>
+</button>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 bg-surface-container-lowest overflow-y-auto custom-scrollbar relative" id="main-scroll-container">
+<!-- Pull to Refresh Simulated Indicator (Hidden by default) -->
+<div class="h-0 overflow-hidden flex items-center justify-center text-primary-container transition-all" id="refresh-indicator">
+<span class="material-symbols-outlined animate-spin mr-2">refresh</span>
+<span class="text-label-md font-label-md">正在刷新数据...</span>
+</div>
+<div class="max-w-3xl mx-auto px-gutter py-lg pb-32 md:pb-lg">
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface">收支明细</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">所有历史交易记录</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-high px-sm py-xs rounded-lg flex items-center gap-xs text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+<span class="font-label-md text-label-md uppercase">筛选</span>
+</button>
+</div>
+</div>
+<!-- Transaction List Grouped by Date -->
+<div class="space-y-xl" id="transaction-list">
+<!-- Group: Today -->
+<div>
+<div class="flex justify-between items-center mb-md sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
+<h2 class="font-headline-md text-headline-md text-on-surface">今天</h2>
+<span class="font-label-md text-label-md text-on-surface-variant">支出: -¥158.00</span>
+</div>
+<div class="space-y-xs">
+<!-- Item 1: Catering -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-catering/15 flex items-center justify-center text-catering">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">午餐：牛肉拉面</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">餐饮美食 • 12:30</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥28.00</div>
+</div>
+<!-- Item 2: Transport -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-transport/15 flex items-center justify-center text-transport">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">commute</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">网约车</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">交通出行 • 09:15</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥45.00</div>
+</div>
+<!-- Item 3: Shopping -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-shopping/15 flex items-center justify-center text-warning">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">水果超市</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">日常购物 • 08:30</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥85.00</div>
+</div>
+</div>
+</div>
+<!-- Group: Yesterday -->
+<div>
+<div class="flex justify-between items-center mb-md sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
+<h2 class="font-headline-md text-headline-md text-on-surface">昨天</h2>
+<span class="font-label-md text-label-md text-on-surface-variant">支出: -¥3,420.00</span>
+</div>
+<div class="space-y-xs">
+<!-- Item: Housing -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-housing/15 flex items-center justify-center text-housing">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">房租</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">居家住房 • 10:00</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥3,400.00</div>
+</div>
+<!-- Item: Catering -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-catering/15 flex items-center justify-center text-catering">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">瑞幸咖啡</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">餐饮美食 • 14:15</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥20.00</div>
+</div>
+</div>
+</div>
+<!-- Group: June 28 -->
+<div>
+<div class="flex justify-between items-center mb-md sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
+<h2 class="font-headline-md text-headline-md text-on-surface">6月28日</h2>
+<span class="font-label-md text-label-md text-on-surface-variant">支出: -¥512.00</span>
+</div>
+<div class="space-y-xs">
+<!-- Item: Entertainment -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-entertainment/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">movie</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">电影票</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">休闲娱乐 • 19:40</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥90.00</div>
+</div>
+<!-- Item: Education -->
+<div class="group bg-white p-md rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant active:scale-[0.99]">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-education/15 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<div class="font-body-md text-body-md font-semibold text-on-surface">知识星球续费</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">教育学习 • 11:20</div>
+</div>
+</div>
+<div class="font-amount-display text-lg font-bold text-on-surface">-¥422.00</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State Filler -->
+<div class="py-xl text-center">
+<p class="text-on-surface-variant font-body-sm">没有更多明细了</p>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 border-t border-outline-variant md:hidden bg-surface dark:bg-inverse-surface shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-high transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">list_alt</span>
+<span class="font-label-md text-label-md">明细</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-container-high transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<span class="font-label-md text-label-md">统计</span>
+</a>
+</nav>
+<!-- FAB for mobile -->
+<button class="md:hidden fixed bottom-20 right-6 w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-xl z-50 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</button>
+<script>
+        // Micro-interactions and Scroll Simulation
+        const scrollContainer = document.getElementById('main-scroll-container');
+        const refreshIndicator = document.getElementById('refresh-indicator');
+        
+        let startY = 0;
+        let pulling = false;
+
+        scrollContainer.addEventListener('touchstart', (e) => {
+            if (scrollContainer.scrollTop === 0) {
+                startY = e.touches[0].pageY;
+                pulling = true;
+            }
+        });
+
+        scrollContainer.addEventListener('touchmove', (e) => {
+            if (!pulling) return;
+            const currentY = e.touches[0].pageY;
+            const diff = currentY - startY;
+
+            if (diff > 0 && diff < 150) {
+                refreshIndicator.style.height = diff + 'px';
+                refreshIndicator.style.opacity = diff / 150;
+            }
+        });
+
+        scrollContainer.addEventListener('touchend', () => {
+            if (!pulling) return;
+            pulling = false;
+            
+            const currentHeight = parseInt(refreshIndicator.style.height);
+            if (currentHeight > 60) {
+                // Simulate refresh
+                refreshIndicator.style.height = '60px';
+                setTimeout(() => {
+                    refreshIndicator.style.height = '0px';
+                    refreshIndicator.style.opacity = '0';
+                }, 1500);
+            } else {
+                refreshIndicator.style.height = '0px';
+                refreshIndicator.style.opacity = '0';
+            }
+        });
+
+        // Desktop Hover Effect Simulation
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.classList.add('translate-x-1');
+            });
+            item.addEventListener('mouseleave', () => {
+                item.classList.remove('translate-x-1');
+            });
+        });
+    </script>
+</body></html>

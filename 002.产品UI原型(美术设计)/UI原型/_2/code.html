@@ -1,0 +1,480 @@
+<!DOCTYPE html><html class="light" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>我的账本 - 个人中心</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#ffb0cf",
+                        "surface-container-high": "#f1e4f7",
+                        "on-surface-variant": "#4f444a",
+                        "tertiary-container": "#ddbfd2",
+                        "surface-container-highest": "#ebdef1",
+                        "tertiary-fixed-dim": "#dcbed1",
+                        "outline-variant": "#d3c2ca",
+                        "on-primary-container": "#833a5c",
+                        "on-primary-fixed-variant": "#742e50",
+                        "tertiary-fixed": "#f9daed",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#281623",
+                        "primary": "#904568",
+                        "surface": "#fff7fe",
+                        "on-primary-fixed": "#3d0123",
+                        "on-error": "#ffffff",
+                        "primary-container": "#ffb1d0",
+                        "outline": "#81737a",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#352d3c",
+                        "secondary-container": "#eedee8",
+                        "on-secondary-fixed": "#211920",
+                        "tertiary": "#6f5767",
+                        "secondary": "#665b63",
+                        "secondary-fixed-dim": "#d1c2cc",
+                        "surface-dim": "#e3d6e9",
+                        "on-background": "#201926",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "background": "#fff7fe",
+                        "primary-fixed": "#ffd9e5",
+                        "inverse-primary": "#ffb0cf",
+                        "on-tertiary-fixed-variant": "#56404f",
+                        "secondary-fixed": "#eedee8",
+                        "inverse-on-surface": "#faecff",
+                        "surface-container": "#f7e9fd",
+                        "surface-bright": "#fff7fe",
+                        "surface-variant": "#ebdef1",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#634c5c",
+                        "on-secondary-container": "#6d6169",
+                        "on-secondary-fixed-variant": "#4e444c",
+                        "surface-container-low": "#fbf0ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "8px",
+                        "md": "16px",
+                        "gutter": "20px",
+                        "base": "4px",
+                        "2xl": "48px",
+                        "container-max": "1200px",
+                        "xl": "32px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fff7fe;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(144, 69, 104, 0.1);
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(144, 69, 104, 0.2);
+        }
+    </style>
+<style>
+            @keyframes float {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-20px) scale(1.05); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        </style><style>
+            @keyframes float {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-20px) scale(1.05); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        </style><style>
+            @keyframes float {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-20px) scale(1.05); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        </style></head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+<!-- SideNavBar (Desktop) -->
+<aside class="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container dark:bg-surface-container-highest p-md gap-xs fixed z-40">
+<div class="flex items-center gap-sm mb-lg px-xs">
+<img class="w-10 h-10 object-contain" data-alt="A delicate, minimalist flower logo for '我的账本' app, designed with soft petal pink and sage green outlines. The icon is centered in a white circle with a soft lavender glow, reflecting a serene and nurturing financial reflection brand identity. The style is sophisticated modernism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAO4F7Asp2ugnxlOqnqzt0fO7ItunZzeiGoVL_9newdbpclb2f0UUG-0GrFc4D6YyBfRcJpgvzFjV1Y_T8KSm2xxLuwn5oiX7S-iXaDPPJGmESAVS7CSEP0CAPbfUsJoBwxvWwHnmyGhN8pNgYDeQNG0gPXzacKwSH7niX629KFLGitSH9WRIO8B_8u73uY-tF3g7kEhyowwxsCXx5QSwkF29z1NcKvLsm8fF5e1tw6imFsqUf0NngzxGJ1nm249sxFyCp9P4ZAS8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">我的账本</h1>
+</div>
+<nav class="flex flex-col gap-xs flex-1">
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">仪表盘</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-body-md text-body-md">收支明细</span>
+</a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">统计报表</span>
+</a>
+<!-- Active State: 个人中心 -->
+<a class="flex items-center gap-md p-md bg-primary-container text-on-primary-container rounded-lg font-semibold transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-body-md text-body-md">个人中心</span>
+</a>
+</nav>
+
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen relative">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky shadow-sm bg-surface dark:bg-surface-dim z-30">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">个人中心</h2>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center gap-sm text-secondary">
+<span class="font-label-md text-label-md">最后同步: 刚刚</span>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Content Canvas -->
+<div class="flex-1 p-gutter max-w-container-max mx-auto w-full mb-20 md:mb-0">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Profile Header Card (Asymmetric Layout) -->
+<section class="lg:col-span-12">
+<div class="bg-white rounded-lg p-xl shadow-sm flex flex-col md:flex-row items-center gap-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-[120px] text-primary" data-icon="flutter_dash">flutter_dash</span>
+</div>
+<div class="relative cursor-pointer">
+<div class="w-32 h-32 rounded-full border-4 border-primary-fixed p-1">
+<img class="w-full h-full object-cover rounded-full" data-alt="A portrait of a cheerful person with a warm, soft expression, set against a background of blurred pastel flowers. The lighting is soft and golden, matching a high-end personal finance app's branding. The image is professional yet approachable, framed in a circular avatar style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJNFMKnEPBiMIliTrn82tz9eDjne28_I64mgV8HTQ1hfagpccEAtOorCUoGEoM1AEnMgOA3lWdLntDRMCoPqRnQQwCSjS9emeJJpcAW8mpeIfLrxtbyTpDxPwjoltJ3Jdhd9m4RabG-k2fgLjKe_Y5mN8o8hsCgCS5KfldvJaH1fLfxvXlpBSP1rvn2HvqEENixFidZA5Jt43ygybbSLS4EMB0Cw8XT6z6eQ-5-TRdXb19oUTPGsNiXS66wqNnIvFbKdXlTyKANF0">
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<input type="file" id="avatar-upload" accept="image/*" class="sr-only"><input type="file" id="avatar-upload" accept="image/*" class="sr-only"><script>
+(function() {
+    const container = document.querySelector('section.lg\\:col-span-12 div.relative');
+    const fileInput = document.getElementById('avatar-upload');
+    const avatarImg = container.querySelector('img');
+    const editBtn = container.querySelector('button');
+
+    if (editBtn && fileInput && avatarImg) {
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+})();
+</script></div>
+<div class="text-center md:text-left flex-1">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">林清怡 (Claire)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center justify-center md:justify-start gap-xs mt-xs">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-md py-1 rounded-full font-semibold text-xs uppercase tracking-wider">Premium Member</span>
+<span class="text-secondary">• 加入于 2023年10月</span>
+</p>
+<div class="mt-md flex flex-wrap gap-sm justify-center md:justify-start">
+<div class="bg-surface-container-low px-md py-2 rounded-lg border border-outline-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="verified">verified</span>
+<span class="font-label-md text-label-md">实名已认证</span>
+</div>
+<div class="bg-surface-container-low px-md py-2 rounded-lg border border-outline-variant flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-md text-label-md">158天连续记账</span>
+</div>
+</div>
+</div>
+<input type="file" id="avatar-upload" accept="image/*" class="sr-only"><script>
+(function() {
+    const container = document.querySelector('section.lg\\:col-span-12 div.relative');
+    const fileInput = document.getElementById('avatar-upload');
+    const avatarImg = container.querySelector('img');
+    const editBtn = container.querySelector('button');
+
+    if (editBtn && fileInput && avatarImg) {
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+})();
+</script></div>
+</section>
+<!-- Edit Profile (Bento Pattern) -->
+<section class="lg:col-span-7">
+<div class="bg-white rounded-lg p-xl shadow-sm h-full">
+<div class="flex items-center gap-md mb-xl">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="person_edit">person_edit</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">编辑基本资料</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">用户名</label>
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-md font-body-md text-on-surface focus:ring-primary focus:border-primary transition-all" type="text" value="林清怡">
+</div>
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">显示语言</label>
+<select class="w-full bg-surface-container-low border-outline-variant rounded-lg p-md font-body-md text-on-surface focus:ring-primary focus:border-primary transition-all">
+<option>简体中文</option>
+<option>English</option>
+</select>
+</div>
+<div class="md:col-span-2 space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">电子邮箱</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-md font-body-md text-on-surface focus:ring-primary focus:border-primary transition-all pl-12" type="email" value="claire.lin@example.com">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="mail">mail</span>
+</div>
+</div>
+<div class="md:col-span-2 space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">手机号码</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-md font-body-md text-on-surface focus:ring-primary focus:border-primary transition-all pl-12" type="tel" value="+86 138 0000 1234">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="call">call</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Security & Preferences -->
+<section class="lg:col-span-5 flex flex-col gap-lg">
+<!-- Security Card -->
+<div class="bg-white rounded-lg p-xl shadow-sm">
+<div class="flex items-center gap-md mb-xl">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="security">security</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">账户安全</h4>
+</div>
+<div class="space-y-md">
+<button class="w-full flex items-center justify-between p-md rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-secondary" data-icon="key">key</span>
+<span class="font-body-md text-body-md">修改登录密码</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-md rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-secondary" data-icon="history">history</span>
+<span class="font-body-md text-body-md">最近登录活动</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-md rounded-lg hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-secondary" data-icon="devices">devices</span>
+<span class="font-body-md text-body-md">管理受信任设备</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Preference Settings Card -->
+<div class="bg-white rounded-lg p-xl shadow-sm flex-1">
+<div class="flex items-center gap-md mb-xl">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="settings">settings</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-on-surface">偏好设置</h4>
+</div>
+<div class="space-y-lg">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md text-on-surface">邮件通知</p>
+<p class="font-label-md text-label-md text-on-surface-variant">接收每月的财务分析报表</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-body-md text-body-md text-on-surface">隐私模式</p>
+<p class="font-label-md text-label-md text-on-surface-variant">在列表中模糊金额数值</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox">
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Sticky Footer Actions (Desktop Style) -->
+<section class="lg:col-span-12 flex justify-end items-center gap-md py-lg border-t border-outline-variant mt-lg">
+<button class="px-xl py-md rounded-full border border-primary text-primary font-headline-md text-headline-md hover:bg-surface-container-high transition-colors active:scale-95">
+                        重置表单
+                    </button>
+<button class="px-xl py-md rounded-full bg-primary text-white font-headline-md text-headline-md shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all active:scale-95">
+                        保存所有更改
+                    </button>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-inverse-surface shadow-lg md:hidden border-t border-outline-variant rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 active:bg-surface-container-high transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 active:bg-surface-container-high transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="font-label-md text-label-md">明细</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 active:bg-surface-container-high transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md text-label-md">统计</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md">我的</span>
+</a>
+</nav>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none z-[-1] opacity-40 overflow-hidden">
+<div class="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-primary-fixed blur-[120px] rounded-full animate-pulse"></div>
+<div class="absolute bottom-[10%] left-[-10%] w-[50vw] h-[50vw] bg-surface-container-high blur-[120px] rounded-full" style="animation: float 20s infinite ease-in-out"></div>
+</div>
+<script>
+        // Simple micro-interaction for save button
+        document.querySelector('button.bg-primary').addEventListener('click', function() {
+            const btn = this;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="sync">sync</span> 保存中...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> 已保存';
+                btn.classList.replace('bg-primary', 'bg-tertiary');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.replace('bg-tertiary', 'bg-primary');
+                    btn.disabled = false;
+                }, 2000);
+            }, 1200);
+        });
+
+        // Floating animation for decorative elements
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-20px) scale(1.05); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+
+
+
+<script>
+(function() {
+    const container = document.querySelector('section.lg\\:col-span-12 div.relative:nth-child(2)');
+    const fileInput = document.getElementById('avatar-upload');
+    const avatarImg = container.querySelector('img');
+
+    if (container && fileInput && avatarImg) {
+        container.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    avatarImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+})();
+</script>
+
+</body></html>

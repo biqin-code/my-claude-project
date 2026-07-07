@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>概览 - 我的账本</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=WenQuanYi+Zen+Hei:Medium&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-image: linear-gradient(90deg, #fff7fe 0%, #fff7fe 100%), linear-gradient(90deg, #ffffff 0%, #ffffff 100%);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* 侧边导航栏 */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 256px;
+      height: 100vh;
+      background: #fbf0ff;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding-bottom: 32px;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ffb1d0, #ffc8dd);
+      border-radius: 9999px;
+    }
+
+    .sidebar-title {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      color: #904568;
+    }
+
+    .sidebar-subtitle {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #4f444a;
+      opacity: 0.7;
+      padding-left: 52px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 177, 208, 0.3);
+    }
+
+    .nav-item.active {
+      background: #ffb1d0;
+    }
+
+    .nav-item.active .nav-text {
+      color: #833a5c;
+      font-weight: 500;
+    }
+
+    .nav-item-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .nav-text {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #4f444a;
+    }
+
+    .nav-spacer {
+      flex: 1;
+      padding-top: 524px;
+    }
+
+    .sidebar-footer {
+      background: rgba(235, 222, 241, 0.3);
+      padding: 16px;
+      border-radius: 48px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: #ffb1d0;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-info {
+      overflow: hidden;
+    }
+
+    .user-name {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #201926;
+      white-space: nowrap;
+    }
+
+    .user-email {
+      font-size: 10px;
+      color: #4f444a;
+      opacity: 0.6;
+      white-space: nowrap;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      margin-left: 256px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* 顶部栏 */
+    .topbar {
+      height: 64px;
+      background: #fff7fe;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-title {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      color: #904568;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .topbar-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .topbar-btn img {
+      width: 18px;
+      height: 18px;
+    }
+
+    .topbar-btn-20 img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* 内容区域 */
+    .content {
+      padding: 32px 20px;
+      max-width: 1200px;
+    }
+
+    /* Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    /* 今日支出卡片 */
+    .today-card {
+      grid-column: 1 / span 8;
+      background: white;
+      border: 1px solid rgba(211, 194, 202, 0.2);
+      border-radius: 48px;
+      padding: 33px;
+      box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .today-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .today-title {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      color: #201926;
+      margin-bottom: 8px;
+    }
+
+    .today-date {
+      font-size: 16px;
+      color: #4f444a;
+    }
+
+    .budget-badge {
+      background: rgba(144, 69, 104, 0.1);
+      padding: 8px 12px;
+      border-radius: 9999px;
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #904568;
+    }
+
+    .today-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .today-amount {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .today-currency {
+      font-size: 20px;
+      font-weight: 600;
+      color: #904568;
+    }
+
+    .today-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #201926;
+      letter-spacing: -0.72px;
+    }
+
+    .category-section {
+      max-width: 448px;
+      flex: 1;
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .category-label {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #4f444a;
+    }
+
+    .category-percent {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #904568;
+    }
+
+    .category-bar {
+      height: 12px;
+      background: #f7e9fd;
+      border-radius: 9999px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .category-bar-item {
+      height: 100%;
+    }
+
+    .category-bar-1 { background: #ff6b6b; width: 187.05px; }
+    .category-bar-2 { background: #4ecdc4; width: 103.92px; }
+    .category-bar-3 { background: #ffe66d; width: 49.88px; }
+    .category-bar-4 { background: #d3c2ca; width: 74.81px; }
+
+    .category-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 4px;
+      overflow: auto;
+    }
+
+    .category-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .category-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+    }
+
+    .category-dot-1 { background: #ff6b6b; }
+    .category-dot-2 { background: #4ecdc4; }
+    .category-dot-3 { background: #ffe66d; }
+
+    .category-text {
+      font-size: 11px;
+      color: #4f444a;
+      white-space: nowrap;
+    }
+
+    .today-decoration {
+      position: absolute;
+      right: -64px;
+      top: -64px;
+      width: 192px;
+      height: 192px;
+      background: rgba(144, 69, 104, 0.05);
+      border-radius: 9999px;
+      filter: blur(32px);
+    }
+
+    /* 存钱计划卡片 */
+    .savings-card {
+      grid-column: 9 / span 4;
+      background: #904568;
+      border-radius: 48px;
+      padding: 32px;
+      box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .savings-title {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .savings-subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .savings-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+    }
+
+    .savings-percent {
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.32px;
+    }
+
+    .savings-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .savings-icon img {
+      width: 20px;
+      height: 12px;
+    }
+
+    .savings-bg {
+      position: absolute;
+      inset: 0;
+      opacity: 0.1;
+    }
+
+    /* 最近记录列表 */
+    .records-card {
+      grid-column: 1 / span 12;
+      background: white;
+      border: 1px solid rgba(211, 194, 202, 0.2);
+      border-radius: 48px;
+      box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .records-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      border-bottom: 1px solid rgba(235, 222, 241, 0.3);
+    }
+
+    .records-title {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+      color: #201926;
+    }
+
+    .records-link {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #904568;
+      cursor: pointer;
+    }
+
+    .record-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      border-bottom: 1px solid rgba(235, 222, 241, 0.3);
+    }
+
+    .record-item:last-child {
+      border-bottom: none;
+    }
+
+    .record-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .record-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.05);
+    }
+
+    .record-icon-1 { background: #ff6b6b; }
+    .record-icon-2 { background: #4ecdc4; }
+    .record-icon-3 { background: #ffe66d; }
+    .record-icon-4 { background: #95e1d3; }
+    .record-icon-5 { background: #aa96da; }
+
+    .record-icon img {
+      width: 15px;
+      height: 20px;
+    }
+
+    .record-icon-2 img { width: 16px; height: 19px; }
+    .record-icon-3 img { width: 16px; height: 20px; }
+    .record-icon-4 img { width: 20px; height: 16px; }
+    .record-icon-5 img { width: 14px; height: 18px; }
+
+    .record-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .record-name {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #201926;
+    }
+
+    .record-category {
+      font-size: 16px;
+      color: #4f444a;
+    }
+
+    .record-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .record-amount {
+      font-size: 16px;
+      font-weight: 500;
+      color: #201926;
+    }
+
+    .record-method {
+      font-family: 'WenQuanYi Zen Hei', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      color: #4f444a;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    /* 浮动按钮 */
+    .fab {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 56px;
+      height: 56px;
+      background: #904568;
+      border-radius: 9999px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 200;
+    }
+
+    .fab img {
+      width: 18.67px;
+      height: 18.67px;
+    }
+
+    /* 图片容器 */
+    .img-container {
+      position: relative;
+      width: 18px;
+      height: 18px;
+    }
+
+    .img-container-20 {
+      width: 20px;
+      height: 20px;
+    }
+
+    .img-container img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <!-- 侧边导航栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon"></div>
+        <span class="sidebar-title">我的账本</span>
+      </div>
+      <div class="sidebar-subtitle">财务管理系统</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item active">
+        <div class="img-container">
+          <img src="https://www.figma.com/api/mcp/asset/98a49e2d-62c1-4ebb-8706-653ac4fdb5e8" alt="">
+        </div>
+        <span class="nav-text">仪表盘</span>
+      </div>
+      <div class="nav-item">
+        <div class="img-container">
+          <img src="https://www.figma.com/api/mcp/asset/29c658ff-ca03-4994-aae8-4cc60afa6a43" alt="">
+        </div>
+        <span class="nav-text">收支明细</span>
+      </div>
+      <div class="nav-item">
+        <div class="img-container">
+          <img src="https://www.figma.com/api/mcp/asset/34c8f637-f374-4cf3-a360-57b4181627d6" alt="">
+        </div>
+        <span class="nav-text">统计报表</span>
+      </div>
+      <div class="nav-item">
+        <div class="img-container">
+          <img src="https://www.figma.com/api/mcp/asset/5af08209-d9ad-4f3c-91c4-f505cb1e9e4e" alt="">
+        </div>
+        <span class="nav-text">个人中心</span>
+      </div>
+
+      <div class="nav-spacer"></div>
+
+      <div class="nav-item">
+        <div class="img-container">
+          <img src="https://www.figma.com/api/mcp/asset/ac2db3e0-6f09-4844-8081-073dfa65802c" alt="">
+        </div>
+        <span class="nav-text">退出</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-avatar">
+        <img src="https://www.figma.com/api/mcp/asset/da40f9c1-eb37-49fc-8623-87e7e11f647f" alt="">
+      </div>
+      <div class="user-info">
+        <div class="user-name">账户设置</div>
+        <div class="user-email">premium@account.com</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <!-- 顶部栏 -->
+    <header class="topbar">
+      <div class="topbar-title">概览</div>
+      <div class="topbar-actions">
+        <div class="topbar-btn">
+          <div class="img-container">
+            <img src="https://www.figma.com/api/mcp/asset/98a49e2d-62c1-4ebb-8706-653ac4fdb5e8" alt="">
+          </div>
+        </div>
+        <div class="topbar-btn topbar-btn-20">
+          <div class="img-container img-container-20">
+            <img src="https://www.figma.com/api/mcp/asset/6b01f761-a45a-4a68-9b86-e3a5157826f8" alt="">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 内容区域 -->
+    <div class="content">
+      <div class="bento-grid">
+        <!-- 今日支出卡片 -->
+        <div class="today-card">
+          <div class="today-header">
+            <div>
+              <div class="today-title">今日支出</div>
+              <div class="today-date">2023年10月24日 星期二</div>
+            </div>
+            <div class="budget-badge">预算充足</div>
+          </div>
+          <div class="today-content">
+            <div class="today-amount">
+              <span class="today-currency">¥</span>
+              <span class="today-value">128.50</span>
+            </div>
+            <div class="category-section">
+              <div class="category-header">
+                <span class="category-label">类目占比</span>
+                <span class="category-percent">前三类占 82%</span>
+              </div>
+              <div class="category-bar">
+                <div class="category-bar-item category-bar-1"></div>
+                <div class="category-bar-item category-bar-2"></div>
+                <div class="category-bar-item category-bar-3"></div>
+                <div class="category-bar-item category-bar-4"></div>
+              </div>
+              <div class="category-legend">
+                <div class="category-legend-item">
+                  <div class="category-dot category-dot-1"></div>
+                  <span class="category-text">餐饮 ¥57.8</span>
+                </div>
+                <div class="category-legend-item">
+                  <div class="category-dot category-dot-2"></div>
+                  <span class="category-text">交通 ¥32.0</span>
+                </div>
+                <div class="category-legend-item">
+                  <div class="category-dot category-dot-3"></div>
+                  <span class="category-text">购物 ¥15.4</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="today-decoration"></div>
+        </div>
+
+        <!-- 存钱计划卡片 -->
+        <div class="savings-card">
+          <div class="savings-bg"></div>
+          <div>
+            <div class="savings-title">存钱计划</div>
+            <div class="savings-subtitle">本月已节省 ¥1,200</div>
+          </div>
+          <div class="savings-content">
+            <div class="savings-percent">75%</div>
+            <div class="savings-icon">
+              <img src="https://www.figma.com/api/mcp/asset/a3278576-563f-4d7c-8103-fb7793336355" alt="">
+            </div>
+          </div>
+        </div>
+
+        <!-- 最近记录列表 -->
+        <div class="records-card">
+          <div class="records-header">
+            <span class="records-title">最近记录</span>
+            <span class="records-link">查看全部</span>
+          </div>
+          <div class="records-list">
+            <div class="record-item">
+              <div class="record-left">
+                <div class="record-icon record-icon-1">
+                  <img src="https://www.figma.com/api/mcp/asset/186c26f1-fde7-449a-9e91-c76fe00a9ca2" alt="">
+                </div>
+                <div class="record-info">
+                  <span class="record-name">午餐外卖</span>
+                  <span class="record-category">餐饮 • 今天 12:30</span>
+                </div>
+              </div>
+              <div class="record-right">
+                <span class="record-amount">-¥28.50</span>
+                <span class="record-method">支付宝</span>
+              </div>
+            </div>
+            <div class="record-item">
+              <div class="record-left">
+                <div class="record-icon record-icon-2">
+                  <img src="https://www.figma.com/api/mcp/asset/bc999d00-c531-4997-9206-f1de5fd996e4" alt="">
+                </div>
+                <div class="record-info">
+                  <span class="record-name">地铁扣费</span>
+                  <span class="record-category">交通 • 今天 08:45</span>
+                </div>
+              </div>
+              <div class="record-right">
+                <span class="record-amount">-¥6.00</span>
+                <span class="record-method">公交卡</span>
+              </div>
+            </div>
+            <div class="record-item">
+              <div class="record-left">
+                <div class="record-icon record-icon-3">
+                  <img src="https://www.figma.com/api/mcp/asset/275ae6a3-d3da-41eb-9bc7-f427cd4e8c6e" alt="">
+                </div>
+                <div class="record-info">
+                  <span class="record-name">超市购物</span>
+                  <span class="record-category">购物 • 昨天 20:15</span>
+                </div>
+              </div>
+              <div class="record-right">
+                <span class="record-amount">-¥85.40</span>
+                <span class="record-method">微信支付</span>
+              </div>
+            </div>
+            <div class="record-item">
+              <div class="record-left">
+                <div class="record-icon record-icon-4">
+                  <img src="https://www.figma.com/api/mcp/asset/b10650b8-ea59-4485-b99a-f76ec898ab8a" alt="">
+                </div>
+                <div class="record-info">
+                  <span class="record-name">电影票</span>
+                  <span class="record-category">娱乐 • 昨天 18:00</span>
+                </div>
+              </div>
+              <div class="record-right">
+                <span class="record-amount">-¥45.00</span>
+                <span class="record-method">支付宝</span>
+              </div>
+            </div>
+            <div class="record-item">
+              <div class="record-left">
+                <div class="record-icon record-icon-5">
+                  <img src="https://www.figma.com/api/mcp/asset/e51acffe-e4a5-4b0e-9045-65a0c2d95023" alt="">
+                </div>
+                <div class="record-info">
+                  <span class="record-name">药店买药</span>
+                  <span class="record-category">医疗 • 10月22日</span>
+                </div>
+              </div>
+              <div class="record-right">
+                <span class="record-amount">-¥12.80</span>
+                <span class="record-method">现金</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浮动按钮 -->
+    <div class="fab">
+      <img src="https://www.figma.com/api/mcp/asset/c506d193-405d-49eb-b022-087bd391539a" alt="">
+    </div>
+  </main>
+</body>
+</html>

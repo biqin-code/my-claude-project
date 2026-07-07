@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#fbf0ff",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#ffb0cf",
+                    "on-tertiary-container": "#634c5c",
+                    "tertiary-container": "#ddbfd2",
+                    "on-primary-container": "#833a5c",
+                    "surface-container": "#f7e9fd",
+                    "surface": "#fff7fe",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#eedee8",
+                    "primary": "#904568",
+                    "tertiary-fixed": "#f9daed",
+                    "on-surface-variant": "#4f444a",
+                    "secondary": "#665b63",
+                    "on-tertiary-fixed": "#281623",
+                    "on-secondary-fixed": "#211920",
+                    "on-primary-fixed-variant": "#742e50",
+                    "on-background": "#201926",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#ffb1d0",
+                    "inverse-surface": "#352d3c",
+                    "surface-tint": "#904568",
+                    "inverse-on-surface": "#faecff",
+                    "secondary-fixed-dim": "#d1c2cc",
+                    "on-surface": "#201926",
+                    "on-primary-fixed": "#3d0123",
+                    "secondary-fixed": "#eedee8",
+                    "on-secondary-fixed-variant": "#4e444c",
+                    "surface-variant": "#ebdef1",
+                    "surface-dim": "#e3d6e9",
+                    "primary-fixed": "#ffd9e5",
+                    "outline": "#81737a",
+                    "on-tertiary-fixed-variant": "#56404f",
+                    "surface-container-high": "#f1e4f7",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#ffb0cf",
+                    "surface-bright": "#fff7fe",
+                    "on-secondary-container": "#6d6169",
+                    "background": "#fff7fe",
+                    "tertiary-fixed-dim": "#dcbed1",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#d3c2ca",
+                    "surface-container-highest": "#ebdef1",
+                    "tertiary": "#6f5767",
+                    "catering": "#FF6B6B",
+                    "transport": "#4ECDC4",
+                    "shopping": "#FFE66D",
+                    "entertainment": "#95E1D3",
+                    "medical": "#AA96DA"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "container-max": "1200px",
+                    "sm": "12px",
+                    "2xl": "48px",
+                    "md": "16px",
+                    "base": "4px",
+                    "xs": "8px",
+                    "gutter": "20px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "amount-display": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "amount-display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Desktop) -->
+<aside class="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-md gap-xs fixed z-40">
+<div class="flex flex-col gap-xs mb-xl">
+<div class="flex items-center gap-sm mb-1">
+<img alt="我的账本 Logo" class="w-10 h-10 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida/AP1WRLsg0JPqb7WxIKn6s8IV0NyN1l8u5xbEO-nMHYknBWo8DG5-_Wm-GnWiTb0UMBXlqfEr0_1ddFg4wCZSbxMyNL0shdbPTcqLYPMq9aT0qe4SC446bd6bvDIxgTiIdfaQg2KadEuL3FLbTJDtQUgKZoqXtH8ENEIt9sldcL50nhnhwEREL7TDJIklS4w3GDaNd3X8ZgFCuFc1kxWO2O9maw_06cKpfOU3sZJ7703cTymhB5xxM0dT7ICrZw"/>
+<div class="font-headline-md text-headline-md font-bold text-primary">我的账本</div>
+</div>
+<div class="font-body-sm text-on-surface-variant opacity-70">财务管理系统</div>
+</div>
+<nav class="flex flex-col gap-xs flex-grow">
+<!-- Dashboard (Active) -->
+<a class="bg-primary-container text-on-primary-container rounded-full font-semibold flex items-center gap-md px-md py-sm transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>仪表盘</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-md px-md py-sm transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>收支明细</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-md px-md py-sm transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>统计报表</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-md px-md py-sm transition-all active:scale-98" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>个人中心</span>
+</a>
+<a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-md px-md py-sm transition-all active:scale-98 mt-auto" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>退出</span>
+</a>
+</nav>
+<div class="mt-auto p-md bg-surface-variant/30 rounded-xl flex items-center gap-md">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdBuDOHtN4dYvpCm20gcNP0lDOGX_9ovFLZ4vP2uIJT9Veh8xJOE_WJwZzR3RtGVrAFYUV1iI6fz2qObMzCQw7aozpEGp_KFzRbiko4YvM5lSUwmqenPQU0x-JAng8B9u6uCfaS3EdJSSwzgoy9vfmhWCng5-fD_oM5wEVyeFgXnINQfrHVkkYI_hsxX63xA_obA7sM-jjJftflgAmgXAB5Bz-SiWbklqsOvNpfHUtFdL50nX5cIHFvpFpEXFLn9P4fNKf3toTdwE"/>
+</div>
+<div class="flex flex-col overflow-hidden">
+<span class="font-label-md truncate text-on-surface">账户设置</span>
+<span class="text-[10px] text-on-surface-variant opacity-60 truncate">premium@account.com</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-grow md:ml-64 flex flex-col min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-30 shadow-sm bg-surface dark:bg-surface-dim flex justify-between items-center px-gutter h-16 max-w-container-max mx-auto">
+<div class="flex items-center gap-md">
+<div class="md:hidden flex items-center gap-xs">
+<img alt="Logo" class="w-8 h-8 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida/AP1WRLsg0JPqb7WxIKn6s8IV0NyN1l8u5xbEO-nMHYknBWo8DG5-_Wm-GnWiTb0UMBXlqfEr0_1ddFg4wCZSbxMyNL0shdbPTcqLYPMq9aT0qe4SC446bd6bvDIxgTiIdfaQg2KadEuL3FLbTJDtQUgKZoqXtH8ENEIt9sldcL50nhnhwEREL7TDJIklS4w3GDaNd3X8ZgFCuFc1kxWO2O9maw_06cKpfOU3sZJ7703cTymhB5xxM0dT7ICrZw"/>
+<div class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">我的账本</div>
+</div>
+<div class="hidden md:block font-headline-md text-headline-md text-primary">概览</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="px-gutter py-xl max-w-container-max mx-auto w-full">
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Today's Summary Card -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-xl shadow-sm border border-outline-variant/20 relative overflow-hidden flex flex-col gap-lg">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-xs">今日支出</h2>
+<p class="text-on-surface-variant font-body-sm">2023年10月24日 星期二</p>
+</div>
+<div class="bg-primary/10 text-primary px-sm py-xs rounded-full font-label-md">
+                            预算充足
+                        </div>
+</div>
+<div class="flex flex-col md:flex-row items-end md:items-center justify-between gap-xl">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-md uppercase tracking-wider mb-xs">总计金额</span>
+<div class="flex items-baseline gap-xs">
+<span class="text-headline-md text-primary">¥</span>
+<span class="font-amount-display text-amount-display text-on-surface">128.50</span>
+</div>
+</div>
+<div class="flex-grow max-w-md w-full">
+<div class="flex justify-between font-label-md mb-2">
+<span class="text-on-surface-variant">类目占比</span>
+<span class="text-primary">前三类占 82%</span>
+</div>
+<div class="h-3 w-full bg-surface-container rounded-full flex overflow-hidden">
+<div class="bg-catering h-full" style="width: 45%;"></div>
+<div class="bg-transport h-full" style="width: 25%;"></div>
+<div class="bg-shopping h-full" style="width: 12%;"></div>
+<div class="bg-outline-variant h-full" style="width: 18%;"></div>
+</div>
+<div class="flex gap-md mt-sm overflow-x-auto no-scrollbar">
+<div class="flex items-center gap-xs whitespace-nowrap">
+<div class="w-2 h-2 rounded-full bg-catering"></div>
+<span class="text-[11px] text-on-surface-variant">餐饮 ¥57.8</span>
+</div>
+<div class="flex items-center gap-xs whitespace-nowrap">
+<div class="w-2 h-2 rounded-full bg-transport"></div>
+<span class="text-[11px] text-on-surface-variant">交通 ¥32.0</span>
+</div>
+<div class="flex items-center gap-xs whitespace-nowrap">
+<div class="w-2 h-2 rounded-full bg-shopping"></div>
+<span class="text-[11px] text-on-surface-variant">购物 ¥15.4</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Background Element -->
+<div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+<!-- Savings Plan Card -->
+<div class="md:col-span-4 bg-primary text-on-primary rounded-xl p-xl shadow-sm relative overflow-hidden flex flex-col justify-between group cursor-pointer transition-transform hover:-translate-y-1">
+<div>
+<h3 class="font-headline-md text-headline-md mb-xs">存钱计划</h3>
+<p class="text-on-primary/80 font-body-sm">本月已节省 ¥1,200</p>
+</div>
+<div class="mt-xl flex items-center justify-between">
+<span class="font-headline-lg text-headline-lg font-bold">75%</span>
+<div class="w-12 h-12 rounded-full bg-on-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<!-- Micro-texture bg -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+</div>
+<!-- Recent Records List -->
+<div class="md:col-span-12 lg:col-span-12 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden">
+<div class="px-xl py-md border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">最近记录</h3>
+<a class="text-primary font-label-md hover:underline" href="#">查看全部</a>
+</div>
+<div class="flex flex-col">
+<!-- Record Item 1 -->
+<div class="px-xl py-md flex items-center justify-between hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-surface-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-catering flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<div class="font-body-md font-semibold text-on-surface">午餐外卖</div>
+<div class="text-on-surface-variant font-body-sm">餐饮 • 今天 12:30</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-on-surface">-¥28.50</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-tighter">支付宝</div>
+</div>
+</div>
+<!-- Record Item 2 -->
+<div class="px-xl py-md flex items-center justify-between hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-surface-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-transport flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined" data-icon="directions_bus">directions_bus</span>
+</div>
+<div>
+<div class="font-body-md font-semibold text-on-surface">地铁扣费</div>
+<div class="text-on-surface-variant font-body-sm">交通 • 今天 08:45</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-on-surface">-¥6.00</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-tighter">公交卡</div>
+</div>
+</div>
+<!-- Record Item 3 -->
+<div class="px-xl py-md flex items-center justify-between hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-surface-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-shopping flex items-center justify-center text-on-background shadow-sm transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<div class="font-body-md font-semibold text-on-surface">超市购物</div>
+<div class="text-on-surface-variant font-body-sm">购物 • 昨天 20:15</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-on-surface">-¥85.40</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-tighter">微信支付</div>
+</div>
+</div>
+<!-- Record Item 4 -->
+<div class="px-xl py-md flex items-center justify-between hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-surface-variant/30">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-entertainment flex items-center justify-center text-on-background shadow-sm transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined" data-icon="movie">movie</span>
+</div>
+<div>
+<div class="font-body-md font-semibold text-on-surface">电影票</div>
+<div class="text-on-surface-variant font-body-sm">娱乐 • 昨天 18:00</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-on-surface">-¥45.00</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-tighter">支付宝</div>
+</div>
+</div>
+<!-- Record Item 5 -->
+<div class="px-xl py-md flex items-center justify-between hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-medical flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+<span class="material-symbols-outlined" data-icon="medication">medication</span>
+</div>
+<div>
+<div class="font-body-md font-semibold text-on-surface">药店买药</div>
+<div class="text-on-surface-variant font-body-sm">医疗 • 10月22日</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-on-surface">-¥12.80</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-tighter">现金</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-50 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:opacity-90 transition-all hover:scale-110 active:scale-90 group">
+<span class="material-symbols-outlined text-[32px] group-hover:rotate-90 transition-transform duration-300" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-inverse-surface shadow-lg md:hidden border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-6 py-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">首页</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-200 active:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="font-label-md text-label-md">明细</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant transition-transform duration-200 active:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="pie_chart">pie_chart</span>
+<span class="font-label-md text-label-md">统计</span>
+</a>
+</nav>
+<script>
+        document.querySelectorAll('.cursor-pointer').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.add('scale-[0.99]');
+                setTimeout(() => {
+                    this.classList.remove('scale-[0.99]');
+                }, 100);
+            });
+        });
+    </script>
+</body></html>
