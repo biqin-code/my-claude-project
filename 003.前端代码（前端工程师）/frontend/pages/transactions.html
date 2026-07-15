@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>收支明细 - 我的账本</title>
+  <title>收支明细 - 王罡的财务管家</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -73,7 +73,7 @@
     <div class="flex flex-col gap-3 mb-6">
       <div class="flex items-center gap-3 mb-1">
         <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-2xl">🍀</div>
-        <div class="text-lg font-bold text-primary">我的账本</div>
+        <div class="text-lg font-bold text-primary">王罡的财务管家</div>
       </div>
       <div class="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
     </div>
@@ -91,6 +91,10 @@
         <span class="material-symbols-outlined">analytics</span>
         <span>统计报表</span>
       </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="budget.html">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <span>预算管理</span>
+      </a>
       <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="settings.html">
         <span class="material-symbols-outlined">settings</span>
         <span>设置</span>
@@ -104,161 +108,70 @@
   </aside>
 
   <!-- 主内容 -->
-  <main class="flex-grow md:ml-64 flex flex-col min-h-screen pb-24 md:pb-0">
+  <main class="flex-grow md:ml-64 flex flex-col min-h-screen pb-24 md:pb-8">
     <!-- 顶部导航栏 -->
     <header class="w-full top-0 sticky z-30 shadow-sm bg-surface flex justify-between items-center px-5 h-16">
       <div class="flex items-center gap-4">
         <div class="md:hidden flex items-center gap-2">
           <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-lg">🍀</div>
-          <div class="text-xl font-bold text-primary">我的账本</div>
+          <div class="text-xl font-bold text-primary">王罡的财务管家</div>
         </div>
         <div class="hidden md:block text-xl font-semibold text-primary">收支明细</div>
       </div>
       <div class="flex items-center gap-4">
-        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
-          <span class="material-symbols-outlined text-primary">search</span>
-        </button>
-        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors" onclick="window.location.href='profile.html'">
-          <span class="material-symbols-outlined text-primary">account_circle</span>
+        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors" onclick="toggleFilter()">
+          <span class="material-symbols-outlined text-primary">filter_list</span>
         </button>
       </div>
     </header>
 
+    <!-- 筛选区域 -->
+    <div id="filterSection" class="px-6 py-4 bg-surface border-b border-outline-variant/20 hidden">
+      <div class="max-w-3xl mx-auto space-y-4">
+        <!-- 搜索框 -->
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+          <input id="searchKeyword" type="text" placeholder="搜索备注..." class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary" onkeyup="handleSearch()">
+        </div>
+
+        <!-- 筛选条件 -->
+        <div class="flex flex-wrap gap-3">
+          <!-- 类型筛选 -->
+          <select id="filterType" class="px-4 py-2 bg-surface-container rounded-full text-sm text-on-surface-variant outline-none cursor-pointer" onchange="handleSearch()">
+            <option value="">全部类型</option>
+            <option value="expense">支出</option>
+            <option value="income">收入</option>
+          </select>
+
+          <!-- 分类筛选 -->
+          <select id="filterCategory" class="px-4 py-2 bg-surface-container rounded-full text-sm text-on-surface-variant outline-none cursor-pointer" onchange="handleSearch()">
+            <option value="">全部分类</option>
+          </select>
+
+          <!-- 日期筛选 -->
+          <input id="filterStartDate" type="date" class="px-4 py-2 bg-surface-container rounded-full text-sm text-on-surface-variant outline-none cursor-pointer" onchange="handleSearch()">
+          <span class="text-on-surface-variant self-center">至</span>
+          <input id="filterEndDate" type="date" class="px-4 py-2 bg-surface-container rounded-full text-sm text-on-surface-variant outline-none cursor-pointer" onchange="handleSearch()">
+        </div>
+
+        <!-- 重置按钮 -->
+        <button onclick="resetFilter()" class="text-sm text-primary hover:underline">清除筛选</button>
+      </div>
+    </div>
+
     <!-- 可滚动内容 -->
-    <div class="px-6 py-8 max-w-3xl mx-auto w-full pb-32 md:pb-8">
-      <div class="flex justify-end mb-6">
-        <button class="bg-surface-container-high px-4 py-2 rounded-lg flex items-center gap-2 text-on-surface-variant hover:bg-surface-variant transition-colors">
-          <span class="material-symbols-outlined text-base">filter_list</span>
-          <span class="text-xs font-medium uppercase">筛选</span>
-        </button>
+    <div id="recordsContainer" class="px-6 py-8 max-w-3xl mx-auto w-full pb-32 md:pb-8 overflow-y-auto" style="max-height: calc(100vh - 180px);">
+      <!-- 记录列表 -->
+      <div id="recordsList" class="space-y-6">
+        <div class="text-center py-8 text-on-surface-variant">加载中...</div>
       </div>
+    </div>
 
-        <!-- 交易记录列表 -->
-        <div class="space-y-8">
-          <!-- 今天 -->
-          <div>
-            <div class="flex justify-between items-center mb-4 sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
-              <h2 class="text-lg font-semibold text-on-surface">今天</h2>
-              <span class="text-xs text-on-surface-variant">支出: -¥158.00</span>
-            </div>
-            <div class="space-y-3">
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-catering/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-catering" style="font-variation-settings: 'FILL' 1;">restaurant</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">午餐：牛肉拉面</div>
-                    <div class="text-sm text-on-surface-variant">餐饮美食 • 12:30</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥28.00</div>
-              </div>
-
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-transport/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-transport" style="font-variation-settings: 'FILL' 1;">commute</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">网约车</div>
-                    <div class="text-sm text-on-surface-variant">交通出行 • 09:15</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥45.00</div>
-              </div>
-
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-shopping/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-warning" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">水果超市</div>
-                    <div class="text-sm text-on-surface-variant">日常购物 • 08:30</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥85.00</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 昨天 -->
-          <div>
-            <div class="flex justify-between items-center mb-4 sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
-              <h2 class="text-lg font-semibold text-on-surface">昨天</h2>
-              <span class="text-xs text-on-surface-variant">支出: -¥3,420.00</span>
-            </div>
-            <div class="space-y-3">
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-housing/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-housing" style="font-variation-settings: 'FILL' 1;">home</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">房租</div>
-                    <div class="text-sm text-on-surface-variant">居家住房 • 10:00</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥3,400.00</div>
-              </div>
-
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-catering/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-catering" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">瑞幸咖啡</div>
-                    <div class="text-sm text-on-surface-variant">餐饮美食 • 14:15</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥20.00</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 6月28日 -->
-          <div>
-            <div class="flex justify-between items-center mb-4 sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
-              <h2 class="text-lg font-semibold text-on-surface">6月28日</h2>
-              <span class="text-xs text-on-surface-variant">支出: -¥512.00</span>
-            </div>
-            <div class="space-y-3">
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-entertainment/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">movie</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">电影票</div>
-                    <div class="text-sm text-on-surface-variant">休闲娱乐 • 19:40</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥90.00</div>
-              </div>
-
-              <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-full bg-education/15 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">school</span>
-                  </div>
-                  <div>
-                    <div class="font-medium text-on-surface">知识星球续费</div>
-                    <div class="text-sm text-on-surface-variant">教育学习 • 11:20</div>
-                  </div>
-                </div>
-                <div class="text-xl font-bold text-on-surface">-¥422.00</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="py-8 text-center">
-          <p class="text-sm text-on-surface-variant">没有更多明细了</p>
-        </div>
-      </div>
-    </main>
+    <!-- 分页 -->
+    <div id="pagination" class="fixed bottom-20 md:bottom-4 left-0 right-0 md:left-auto md:right-8 flex justify-center items-center z-40">
+      <!-- 动态生成分页 -->
+    </div>
+  </main>
 
   <!-- 底部导航栏 (移动端) -->
   <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 border-t border-outline-variant md:hidden bg-surface shadow-lg rounded-t-xl">
@@ -285,7 +198,7 @@
     <span class="material-symbols-outlined">add</span>
   </button>
 
-  <!-- 记账弹窗 -->
+  <!-- 记一笔弹窗 -->
   <div id="addModal" class="fixed inset-0 z-[200] hidden">
     <div class="absolute inset-0 bg-black/50" onclick="hideAddModal()"></div>
     <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
@@ -310,38 +223,21 @@
       <div class="mb-6">
         <p class="text-sm text-on-surface-variant mb-3">选择分类</p>
         <div id="categoryGrid" class="grid grid-cols-4 gap-3">
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="catering" onclick="selectCategory(this, 'catering')">
-            <span class="text-2xl">🍜</span>
-            <span class="text-xs">餐饮</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="transport" onclick="selectCategory(this, 'transport')">
-            <span class="text-2xl">🚗</span>
-            <span class="text-xs">交通</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="shopping" onclick="selectCategory(this, 'shopping')">
-            <span class="text-2xl">🛒</span>
-            <span class="text-xs">购物</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="entertainment" onclick="selectCategory(this, 'entertainment')">
-            <span class="text-2xl">🎬</span>
-            <span class="text-xs">娱乐</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="housing" onclick="selectCategory(this, 'housing')">
-            <span class="text-2xl">🏠</span>
-            <span class="text-xs">住房</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="medical" onclick="selectCategory(this, 'medical')">
-            <span class="text-2xl">💊</span>
-            <span class="text-xs">医疗</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="education" onclick="selectCategory(this, 'education')">
-            <span class="text-2xl">📚</span>
-            <span class="text-xs">教育</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
-            <span class="text-2xl">📦</span>
-            <span class="text-xs">其他</span>
-          </button>
+          <!-- 动态生成 -->
+        </div>
+      </div>
+
+      <!-- 支付方式 -->
+      <div id="paymentSection" class="mb-6">
+        <p class="text-sm text-on-surface-variant mb-3">支付方式</p>
+        <div class="flex flex-wrap gap-2">
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="支付宝" onclick="selectPayment(this, '支付宝')">支付宝</button>
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="微信支付" onclick="selectPayment(this, '微信支付')">微信支付</button>
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="银行转账" onclick="selectPayment(this, '银行转账')">银行转账</button>
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="现金" onclick="selectPayment(this, '现金')">现金</button>
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="公交卡" onclick="selectPayment(this, '公交卡')">公交卡</button>
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="医保卡" onclick="selectPayment(this, '医保卡')">医保卡</button>
+          <button class="payment-btn px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm transition-all" data-payment="滴滴出行" onclick="selectPayment(this, '滴滴出行')">滴滴出行</button>
         </div>
       </div>
 
@@ -362,108 +258,332 @@
   </div>
 
   <script>
+    const API_BASE = 'http://localhost:3000/api';
+    let authToken = localStorage.getItem('finance_token');
+
     let currentType = 'expense';
     let selectedCategory = null;
+    let selectedPayment = null;
+    let expenseCategories = [];
+    let incomeCategories = [];
 
-    function showAddModal() {
-      document.getElementById('addModal').classList.remove('hidden');
-      resetForm();
+    let currentPage = 1;
+    let totalPages = 1;
+    let totalRecords = 0;
+    let isLoading = false;
+
+    // API请求
+    async function apiRequest(url, options = {}) {
+      const defaultOptions = {
+        headers: { 'Content-Type': 'application/json' },
+      };
+      if (authToken) {
+        defaultOptions.headers['Authorization'] = `Bearer ${authToken}`;
+      }
+      const response = await fetch(url, { ...defaultOptions, ...options });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || '请求失败');
+      return data;
     }
 
+    // 格式化金额
+    function formatAmount(amount) {
+      return Math.abs(amount).toFixed(2);
+    }
+
+    // 格式化日期
+    function formatDateCN(dateStr) {
+      const date = new Date(dateStr);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (date.toDateString() === today.toDateString()) return '今天';
+      if (date.toDateString() === yesterday.toDateString()) return '昨天';
+      return `${date.getMonth() + 1}月${date.getDate()}日`;
+    }
+
+    // 格式化时间
+    function formatTime(dateStr) {
+      const date = new Date(dateStr);
+      return date.toTimeString().slice(0, 5);
+    }
+
+    // 获取分类列表
+    async function loadCategories() {
+      try {
+        const result = await apiRequest(`${API_BASE}/transactions/categories`);
+        if (result.code === 200) {
+          expenseCategories = result.data.filter(c => c.type === 'expense');
+          incomeCategories = result.data.filter(c => c.type === 'income');
+          renderCategoryOptions();
+          renderAddCategory();
+        }
+      } catch (error) {
+        console.error('获取分类失败:', error);
+      }
+    }
+
+    // 渲染分类选项到筛选下拉
+    function renderCategoryOptions() {
+      const filterCategory = document.getElementById('filterCategory');
+      const allCategories = [...expenseCategories, ...incomeCategories];
+      filterCategory.innerHTML = '<option value="">全部分类</option>' +
+        allCategories.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+    }
+
+    // 渲染添加记账的分类
+    function renderAddCategory() {
+      const categoryGrid = document.getElementById('categoryGrid');
+      const cats = currentType === 'expense' ? expenseCategories : incomeCategories;
+      categoryGrid.innerHTML = cats.map(cat => `
+        <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category-id="${cat.id}" onclick="selectAddCategory(this, '${cat.id}')">
+          <span class="text-2xl">${cat.icon}</span>
+          <span class="text-xs">${cat.name}</span>
+        </button>
+      `).join('');
+    }
+
+    // 加载记录
+    async function loadRecords(page = 1) {
+      if (isLoading) return;
+      isLoading = true;
+
+      const keyword = document.getElementById('searchKeyword').value.trim();
+      const type = document.getElementById('filterType').value;
+      const categoryId = document.getElementById('filterCategory').value;
+      const startDate = document.getElementById('filterStartDate').value;
+      const endDate = document.getElementById('filterEndDate').value;
+
+      let url = `${API_BASE}/transactions?page=${page}`;
+      if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+      if (type) url += `&type=${type}`;
+      if (categoryId) url += `&categoryId=${categoryId}`;
+      if (startDate) url += `&startDate=${startDate}`;
+      if (endDate) url += `&endDate=${endDate}`;
+
+      try {
+        const result = await apiRequest(url);
+        if (result.code === 200) {
+          currentPage = result.data.pagination.currentPage;
+          totalPages = result.data.pagination.totalPages;
+          totalRecords = result.data.pagination.total;
+
+          renderRecords(result.data.records);
+          renderPagination();
+
+          // 滚动到顶部
+          document.getElementById('recordsContainer').scrollTop = 0;
+        }
+      } catch (error) {
+        console.error('获取记录失败:', error);
+        document.getElementById('recordsList').innerHTML = '<div class="text-center py-8 text-red-500">加载失败</div>';
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    // 渲染记录列表
+    function renderRecords(records) {
+      if (records.length === 0) {
+        document.getElementById('recordsList').innerHTML = '<div class="text-center py-8 text-on-surface-variant">暂无记录</div>';
+        return;
+      }
+
+      // 按日期分组
+      const grouped = {};
+      records.forEach(record => {
+        const dateKey = record.transactionDate;
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(record);
+      });
+
+      let html = '';
+      Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+        const dayRecords = grouped[date];
+        const dayTotal = dayRecords.reduce((sum, r) => {
+          return sum + (r.type === 'expense' ? Math.abs(r.amount) : 0);
+        }, 0);
+
+        html += `
+          <div>
+            <div class="flex justify-between items-center mb-4 sticky top-0 bg-surface-container-lowest/80 backdrop-blur-md py-2 z-10">
+              <h2 class="text-lg font-semibold text-on-surface">${formatDateCN(date)}</h2>
+              <span class="text-xs text-on-surface-variant">支出: -¥${formatAmount(dayTotal)}</span>
+            </div>
+            <div class="space-y-3">
+              ${dayRecords.map(record => `
+                <div class="bg-white p-4 rounded-xl flex items-center justify-between hover:shadow-md transition-all cursor-pointer">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: ${record.category.color}20">
+                      <span class="text-xl">${record.category.icon}</span>
+                    </div>
+                    <div>
+                      <div class="font-medium text-on-surface">${record.note || record.category.name}</div>
+                      <div class="text-sm text-on-surface-variant">${record.category.name} • ${formatTime(record.createdAt)}</div>
+                    </div>
+                  </div>
+                  <div class="text-xl font-bold ${record.type === 'expense' ? 'text-red-500' : 'text-green-500'}">
+                    ${record.type === 'expense' ? '-' : '+'}¥${formatAmount(record.amount)}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('recordsList').innerHTML = html;
+    }
+
+    // 渲染分页
+    function renderPagination() {
+      const pagination = document.getElementById('pagination');
+      if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+      }
+
+      let html = '';
+
+      // 上一页
+      if (currentPage > 1) {
+        html += `<button onclick="goToPage(${currentPage - 1})" class="w-10 h-10 flex items-center justify-center rounded-full bg-white text-primary shadow-md hover:bg-primary hover:text-white transition-all">
+          <span class="material-symbols-outlined text-sm">chevron_left</span>
+        </button>`;
+      }
+
+      // 页码
+      const maxVisible = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+      if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+      }
+
+      if (startPage > 1) {
+        html += `<button onclick="goToPage(1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-white text-primary shadow-md hover:bg-primary hover:text-white transition-all">1</button>`;
+        if (startPage > 2) html += `<span class="text-on-surface-variant px-2">...</span>`;
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        const isActive = i === currentPage;
+        html += `<button onclick="goToPage(${i})" class="w-10 h-10 flex items-center justify-center rounded-full ${isActive ? 'bg-primary text-white' : 'bg-white text-primary'} shadow-md hover:bg-primary hover:text-white transition-all">${i}</button>`;
+      }
+
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += `<span class="text-on-surface-variant px-2">...</span>`;
+        html += `<button onclick="goToPage(${totalPages})" class="w-10 h-10 flex items-center justify-center rounded-full bg-white text-primary shadow-md hover:bg-primary hover:text-white transition-all">${totalPages}</button>`;
+      }
+
+      // 下一页
+      if (currentPage < totalPages) {
+        html += `<button onclick="goToPage(${currentPage + 1})" class="w-10 h-10 flex items-center justify-center rounded-full bg-white text-primary shadow-md hover:bg-primary hover:text-white transition-all">
+          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </button>`;
+      }
+
+      pagination.innerHTML = html;
+    }
+
+    // 跳转到指定页
+    function goToPage(page) {
+      loadRecords(page);
+    }
+
+    // 搜索（防抖）
+    let searchTimeout;
+    function handleSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        loadRecords(1);
+      }, 300);
+    }
+
+    // 切换筛选显示
+    function toggleFilter() {
+      const filterSection = document.getElementById('filterSection');
+      filterSection.classList.toggle('hidden');
+    }
+
+    // 重置筛选
+    function resetFilter() {
+      document.getElementById('searchKeyword').value = '';
+      document.getElementById('filterType').value = '';
+      document.getElementById('filterCategory').value = '';
+      document.getElementById('filterStartDate').value = '';
+      document.getElementById('filterEndDate').value = '';
+      loadRecords(1);
+    }
+
+    // 显示添加弹窗
+    function showAddModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+      resetAddForm();
+    }
+
+    // 隐藏添加弹窗
     function hideAddModal() {
       document.getElementById('addModal').classList.add('hidden');
     }
 
-    function resetForm() {
+    // 重置添加表单
+    function resetAddForm() {
       document.getElementById('amountInput').value = '';
       document.getElementById('noteInput').value = '';
       selectedCategory = null;
+      selectedPayment = null;
       document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
+      });
+      document.querySelectorAll('.payment-btn').forEach(btn => {
         btn.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
       });
     }
 
+    // 切换记账类型
     function switchTab(type) {
       currentType = type;
       const tabExpense = document.getElementById('tabExpense');
       const tabIncome = document.getElementById('tabIncome');
-      const categoryGrid = document.getElementById('categoryGrid');
+      const paymentSection = document.getElementById('paymentSection');
 
       if (type === 'expense') {
         tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
         tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
-        categoryGrid.innerHTML = `
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="catering" onclick="selectCategory(this, 'catering')">
-            <span class="text-2xl">🍜</span>
-            <span class="text-xs">餐饮</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="transport" onclick="selectCategory(this, 'transport')">
-            <span class="text-2xl">🚗</span>
-            <span class="text-xs">交通</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="shopping" onclick="selectCategory(this, 'shopping')">
-            <span class="text-2xl">🛒</span>
-            <span class="text-xs">购物</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="entertainment" onclick="selectCategory(this, 'entertainment')">
-            <span class="text-2xl">🎬</span>
-            <span class="text-xs">娱乐</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="housing" onclick="selectCategory(this, 'housing')">
-            <span class="text-2xl">🏠</span>
-            <span class="text-xs">住房</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="medical" onclick="selectCategory(this, 'medical')">
-            <span class="text-2xl">💊</span>
-            <span class="text-xs">医疗</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="education" onclick="selectCategory(this, 'education')">
-            <span class="text-2xl">📚</span>
-            <span class="text-xs">教育</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
-            <span class="text-2xl">📦</span>
-            <span class="text-xs">其他</span>
-          </button>
-        `;
+        paymentSection.classList.remove('hidden');
       } else {
         tabIncome.className = 'flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all';
         tabExpense.className = 'flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all';
-        categoryGrid.innerHTML = `
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="salary" onclick="selectCategory(this, 'salary')">
-            <span class="text-2xl">💰</span>
-            <span class="text-xs">工资</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="bonus" onclick="selectCategory(this, 'bonus')">
-            <span class="text-2xl">🎁</span>
-            <span class="text-xs">奖金</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="investment" onclick="selectCategory(this, 'investment')">
-            <span class="text-2xl">📈</span>
-            <span class="text-xs">投资</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="gift" onclick="selectCategory(this, 'gift')">
-            <span class="text-2xl">🎀</span>
-            <span class="text-xs">礼金</span>
-          </button>
-          <button class="category-btn flex flex-col items-center gap-1 p-3 rounded-xl bg-surface-container transition-all" data-category="others" onclick="selectCategory(this, 'others')">
-            <span class="text-2xl">📦</span>
-            <span class="text-xs">其他</span>
-          </button>
-        `;
+        paymentSection.classList.add('hidden');
+        selectedPayment = null;
       }
       selectedCategory = null;
+      renderAddCategory();
     }
 
-    function selectCategory(btn, category) {
+    // 选择分类
+    function selectAddCategory(btn, categoryId) {
       document.querySelectorAll('.category-btn').forEach(b => {
         b.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
       });
       btn.classList.add('ring-2', 'ring-primary', 'bg-primary-container');
-      selectedCategory = category;
+      selectedCategory = categoryId;
     }
 
-    function submitRecord() {
+    // 选择支付方式
+    function selectPayment(btn, payment) {
+      document.querySelectorAll('.payment-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-primary', 'bg-primary-container');
+      });
+      btn.classList.add('ring-2', 'ring-primary', 'bg-primary-container');
+      selectedPayment = payment;
+    }
+
+    // 提交记录
+    async function submitRecord() {
       const amount = parseFloat(document.getElementById('amountInput').value);
       const note = document.getElementById('noteInput').value.trim();
 
@@ -471,28 +591,60 @@
         alert('请输入有效金额');
         return;
       }
-
       if (!selectedCategory) {
         alert('请选择分类');
         return;
       }
+      if (currentType === 'expense' && !selectedPayment) {
+        alert('请选择支付方式');
+        return;
+      }
 
-      const record = {
-        id: Date.now(),
-        type: currentType,
-        category: selectedCategory,
-        amount: currentType === 'expense' ? -amount : amount,
-        note: note || (currentType === 'expense' ? '支出' : '收入'),
-        date: new Date().toISOString()
-      };
+      try {
+        const result = await apiRequest(`${API_BASE}/transactions`, {
+          method: 'POST',
+          body: JSON.stringify({
+            type: currentType,
+            categoryId: parseInt(selectedCategory),
+            amount: amount,
+            note: note,
+            paymentMethod: currentType === 'expense' ? selectedPayment : ''
+          })
+        });
 
-      const records = JSON.parse(localStorage.getItem('records') || '[]');
-      records.unshift(record);
-      localStorage.setItem('records', JSON.stringify(records));
-
-      hideAddModal();
-      window.location.reload();
+        if (result.code === 200) {
+          alert('添加成功！');
+          hideAddModal();
+          loadRecords(1);
+        } else {
+          alert(result.message || '添加失败');
+        }
+      } catch (error) {
+        console.error('添加记录失败:', error);
+        alert('添加失败，请稍后重试');
+      }
     }
+
+    // 滚动监听（用于分页同步）
+    document.getElementById('recordsContainer').addEventListener('scroll', function() {
+      const container = this;
+      if (container.scrollTop === 0 && currentPage > 1) {
+        // 滚动到顶部且不是第一页，加载上一页
+        goToPage(currentPage - 1);
+      }
+    });
+
+    // 页面加载
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!authToken) {
+        alert('请先登录');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      await loadCategories();
+      loadRecords(1);
+    });
   </script>
 </body>
 </html>

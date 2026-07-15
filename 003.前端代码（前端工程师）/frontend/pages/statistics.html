@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>统计报表 - 我的账本</title>
+  <title>统计报表 - 王罡的财务管家</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -70,7 +70,7 @@
     <div class="flex flex-col gap-3 mb-6">
       <div class="flex items-center gap-3 mb-1">
         <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-2xl">🍀</div>
-        <div class="text-lg font-bold text-primary">我的账本</div>
+        <div class="text-lg font-bold text-primary">王罡的财务管家</div>
       </div>
       <div class="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
     </div>
@@ -87,6 +87,10 @@
         <span class="material-symbols-outlined">analytics</span>
         <span>统计报表</span>
       </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="budget.html">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <span>预算管理</span>
+      </a>
       <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="settings.html">
         <span class="material-symbols-outlined">settings</span>
         <span>设置</span>
@@ -101,7 +105,7 @@
       <div class="flex items-center gap-4">
         <div class="md:hidden flex items-center gap-2">
           <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-lg">🍀</div>
-          <div class="text-xl font-bold text-primary">我的账本</div>
+          <div class="text-xl font-bold text-primary">王罡的财务管家</div>
         </div>
         <div class="hidden md:block text-xl font-semibold text-primary">统计报表</div>
       </div>
@@ -269,6 +273,17 @@
         </div>
       </div>
     </main>
+
+  <script>
+    // 检查登录状态
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('finance_token');
+      if (!token) {
+        alert('请先登录');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
 
   <!-- 底部导航栏 (移动端) -->
   <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 border-t border-outline-variant md:hidden bg-surface shadow-lg rounded-t-xl">

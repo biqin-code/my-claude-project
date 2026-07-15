@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>登录 - 我的账本（测试）</title>
+  <title>登录 - 王罡的财务管家（测试）</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -76,7 +76,7 @@
       <!-- Logo和标题 -->
       <div class="mb-6 flex flex-col items-center gap-3">
         <div class="w-20 h-20 rounded-full bg-pink-100 flex items-center justify-center text-5xl">🍀</div>
-        <h1 class="text-2xl font-bold text-primary">我的账本</h1>
+        <h1 class="text-2xl font-bold text-primary">王罡的财务管家</h1>
         <p class="text-sm text-secondary">开启您的财务极简之旅</p>
       </div>
 
@@ -108,6 +108,8 @@
           <input class="w-4 h-4 text-primary border-outline rounded" id="remember" type="checkbox"/>
           <label class="text-sm text-on-surface-variant cursor-pointer" for="remember">记住登录状态</label>
         </div>
+
+        <div id="errorMsg" class="text-error text-sm text-center hidden"></div>
 
         <button class="mt-2 w-full text-lg font-semibold py-4 rounded-xl shadow-sm hover:brightness-105 active:scale-[0.98] transition-all flex justify-center items-center gap-2 bg-primary text-on-primary" type="submit">
           登录
@@ -142,7 +144,7 @@
     </div>
 
     <footer class="mt-6 text-center">
-      <p class="text-xs text-outline">© 2024 我的账本 - 智能财务管理专家</p>
+      <p class="text-xs text-outline">© 2024 王罡的财务管家 - 智能财务管理专家</p>
       <div class="flex justify-center gap-4 mt-2">
         <a class="text-xs text-outline-variant hover:text-primary transition-colors" href="#">隐私政策</a>
         <a class="text-xs text-outline-variant hover:text-primary transition-colors" href="#">服务条款</a>
@@ -165,16 +167,48 @@
 
     function handleLogin(e) {
       e.preventDefault();
-      const username = document.getElementById('username').value;
+      const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const submitBtn = document.querySelector('button[type="submit"]');
 
       if (!username || !password) {
         alert('请输入用户名和密码');
         return;
       }
 
-      window.location.href = 'dashboard.html';
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="animate-spin">⏳</span> 登录中...';
+
+      // 从 localStorage 获取已注册用户
+      const users = JSON.parse(localStorage.getItem('finance_users') || '[]');
+      const user = users.find(u => u.username === username && u.password === password);
+
+      setTimeout(() => {
+        if (user) {
+          // 保存登录信息
+          localStorage.setItem('finance_token', 'local_token_' + user.id);
+          localStorage.setItem('finance_user', JSON.stringify({
+            id: user.id,
+            username: user.username,
+          }));
+          window.location.href = 'dashboard.html';
+        } else {
+          errorMsg.textContent = '用户名或密码错误';
+          errorMsg.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '登录';
+        }
+      }, 500);
     }
+
+    // 页面加载时检查是否已登录
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('finance_token');
+      if (token) {
+        window.location.href = 'dashboard.html';
+      }
+    });
   </script>
 </body>
 </html>

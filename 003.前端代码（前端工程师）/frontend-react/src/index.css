@@ -9,3 +9,17 @@
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 进度条动画 */
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}

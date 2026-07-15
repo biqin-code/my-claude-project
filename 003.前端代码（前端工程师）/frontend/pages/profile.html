@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>个人中心 - 我的账本</title>
+  <title>个人中心 - 王罡的财务管家</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -69,7 +69,7 @@
   <aside class="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container p-6 gap-3 fixed z-40">
     <div class="flex items-center gap-3 mb-6">
       <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-xl">🍀</div>
-      <span class="text-lg font-bold text-primary">我的账本</span>
+      <span class="text-lg font-bold text-primary">王罡的财务管家</span>
     </div>
     <nav class="flex flex-col gap-2 flex-1">
       <a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="dashboard.html">
@@ -84,7 +84,11 @@
         <span class="material-symbols-outlined">analytics</span>
         <span class="text-base">统计报表</span>
       </a>
-      <a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="settings.html">
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="budget.html">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <span>预算管理</span>
+      </a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all" href="settings.html">
         <span class="material-symbols-outlined">settings</span>
         <span class="text-base">设置</span>
       </a>
@@ -315,9 +319,19 @@
 
     function handleLogout() {
       if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('finance_token');
+        localStorage.removeItem('finance_user');
         window.location.href = 'login.html';
       }
     }
+
+    // 页面加载时检查登录状态
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('finance_token');
+      if (!token) {
+        window.location.href = 'login.html';
+      }
+    });
   </script>
 </body>
 </html>

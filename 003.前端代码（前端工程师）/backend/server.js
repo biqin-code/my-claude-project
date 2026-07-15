@@ -8,13 +8,19 @@ const cors = require('cors');
 const mysql = require('mysql2/promise');
 const { v4: uuidv4 } = require('uuid');
 const userRoutes = require('./routes/users');
+const transactionRoutes = require('./routes/transactions');
+const statisticsRoutes = require('./routes/statistics');
+const categoryRoutes = require('./routes/categories');
+const budgetRoutes = require('./routes/budgets');
 
 const app = express();
 const PORT = 3000;
 
 // 中间件
 app.use(cors());
-app.use(express.json());
+// 增加JSON请求体大小限制，支持更大的头像Base64数据（约5MB）
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // MySQL 连接池
 const pool = mysql.createPool({
@@ -44,6 +50,10 @@ app.set('db', pool);
 
 // 路由
 app.use('/api/users', userRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/statistics', statisticsRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/budgets', budgetRoutes);
 
 // 健康检查
 app.get('/api/health', (req, res) => {

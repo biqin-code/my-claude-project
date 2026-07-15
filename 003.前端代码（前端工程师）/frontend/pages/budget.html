@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>预算管理 - 王罡的财务管家</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#904568",
+            "primary-container": "#ffb1d0",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#833a5c",
+            secondary: "#665b63",
+            "secondary-container": "#eedee8",
+            tertiary: "#6f5767",
+            "tertiary-container": "#ddbfd2",
+            surface: "#fff7fe",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#fbf0ff",
+            "surface-container": "#f7e9fd",
+            "surface-container-high": "#f1e4f7",
+            "surface-container-highest": "#ebdef1",
+            "surface-dim": "#e3d6e9",
+            "on-surface": "#201926",
+            "on-surface-variant": "#4f444a",
+            background: "#fff7fe",
+            catering: "#FF6B6B",
+            transport: "#4ECDC4",
+            shopping: "#FFE66D",
+            entertainment: "#95E1D3",
+            housing: "#F38181",
+            medical: "#AA96DA",
+            education: "#FCBAD3",
+            others: "#A8D8EA",
+            success: "#10B981",
+            warning: "#F59E0B",
+            error: "#ba1a1a",
+            outline: "#81737a",
+            "outline-variant": "#d3c2ca"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            lg: "2rem",
+            xl: "3rem",
+            full: "9999px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    /* 进度条动画 */
+    .progress-bar {
+      transition: width 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+  <!-- 侧边导航 (桌面端) -->
+  <aside class="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-6 gap-3 fixed z-40">
+    <div class="flex flex-col gap-3 mb-6">
+      <div class="flex items-center gap-3 mb-1">
+        <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-2xl">🍀</div>
+        <div class="text-lg font-bold text-primary">王罡的财务管家</div>
+      </div>
+      <div class="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
+    </div>
+
+    <nav class="flex flex-col gap-3 flex-grow">
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>首页概览</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="transactions.html">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span>收支明细</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="statistics.html">
+        <span class="material-symbols-outlined">analytics</span>
+        <span>统计报表</span>
+      </a>
+      <a class="bg-primary-container text-on-primary-container rounded-full font-semibold flex items-center gap-4 px-4 py-3 transition-all" href="budget.html">
+        <span class="material-symbols-outlined">account_balance_wallet</span>
+        <span>预算管理</span>
+      </a>
+      <a class="text-on-surface-variant hover:bg-surface-variant rounded-full flex items-center gap-4 px-4 py-3 transition-all" href="settings.html">
+        <span class="material-symbols-outlined">settings</span>
+        <span>设置</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="flex-1 md:ml-64 flex flex-col min-h-screen pb-24 md:pb-0">
+    <!-- 顶部导航栏 -->
+    <header class="w-full top-0 sticky shadow-sm bg-surface z-30 flex justify-between items-center px-5 h-16">
+      <div class="flex items-center gap-4">
+        <div class="md:hidden flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-lg">🍀</div>
+          <div class="text-xl font-bold text-primary">王罡的财务管家</div>
+        </div>
+        <div class="hidden md:block text-xl font-semibold text-primary">预算管理</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="monthSelector" class="px-3 pr-6 py-2 bg-surface-container rounded-full text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary cursor-pointer" onchange="loadBudgets()">
+          <!-- 月份选项动态生成 -->
+        </select>
+      </div>
+    </header>
+
+    <!-- 页面内容 -->
+    <div class="flex-1 px-6 py-8 max-w-6xl mx-auto w-full">
+      <!-- 月度总预算概览 -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <!-- 总预算卡片 -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-on-primary-container">account_balance_wallet</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-on-surface">本月预算</h3>
+              <p class="text-sm text-on-surface-variant">2026年7月</p>
+            </div>
+          </div>
+          <div class="text-3xl font-bold text-primary mb-2">¥<span id="totalBudget">0.00</span></div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-on-surface-variant">剩余</span>
+            <span id="totalRemaining" class="font-semibold text-success">¥0.00</span>
+          </div>
+        </div>
+
+        <!-- 已使用卡片 -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-warning/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-warning">payments</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-on-surface">已使用</h3>
+              <p class="text-sm text-on-surface-variant">本月支出</p>
+            </div>
+          </div>
+          <div class="text-3xl font-bold text-warning mb-2">¥<span id="totalSpent">0.00</span></div>
+          <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+            <div id="totalProgress" class="h-full bg-warning rounded-full progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- 超支警告卡片 -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center">
+              <span class="material-symbols-outlined text-error">warning</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-on-surface">超支统计</h3>
+              <p class="text-sm text-on-surface-variant">超出预算的分类</p>
+            </div>
+          </div>
+          <div class="text-3xl font-bold text-error mb-2"><span id="overBudgetCount">0</span> 个</div>
+          <div class="text-sm text-on-surface-variant">分类超出设定预算</div>
+        </div>
+      </div>
+
+      <!-- 分类预算列表 -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 mb-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-semibold text-on-surface">分类预算</h3>
+          <button onclick="showAddBudgetModal()" class="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-all">
+            <span class="material-symbols-outlined text-base">add</span>
+            <span>添加预算</span>
+          </button>
+        </div>
+
+        <!-- 预算分类列表 -->
+        <div id="budgetList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 动态渲染预算卡片 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div id="emptyState" class="text-center py-12 hidden">
+          <div class="w-20 h-20 rounded-full bg-surface-container mx-auto flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-4xl text-on-surface-variant">account_balance_wallet</span>
+          </div>
+          <h4 class="text-lg font-semibold text-on-surface mb-2">暂无预算记录</h4>
+          <p class="text-sm text-on-surface-variant mb-4">设置每月预算，帮助您更好地管理财务</p>
+          <button onclick="showAddBudgetModal()" class="bg-primary text-on-primary px-6 py-3 rounded-full font-medium hover:opacity-90 transition-all">
+            添加第一个预算
+          </button>
+        </div>
+      </div>
+
+      <!-- 预算小贴士 -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-success">lightbulb</span>
+          </div>
+          <h3 class="text-lg font-semibold text-on-surface">预算小贴士</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-surface-container p-4 rounded-xl">
+            <p class="text-sm text-on-surface">💡 建议将每月收入的50%用于必要支出</p>
+          </div>
+          <div class="bg-surface-container p-4 rounded-xl">
+            <p class="text-sm text-on-surface">💰 为每个支出分类设置合理预算</p>
+          </div>
+          <div class="bg-surface-container p-4 rounded-xl">
+            <p class="text-sm text-on-surface">📊 定期检查预算使用情况</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部导航栏 (移动端) -->
+  <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface shadow-lg md:hidden border-t border-outline-variant rounded-t-xl">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="dashboard.html">
+      <span class="material-symbols-outlined">home</span>
+      <span class="text-xs font-medium">首页</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="transactions.html">
+      <span class="material-symbols-outlined">list_alt</span>
+      <span class="text-xs font-medium">明细</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="statistics.html">
+      <span class="material-symbols-outlined">pie_chart</span>
+      <span class="text-xs font-medium">统计</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="budget.html">
+      <span class="material-symbols-outlined">account_balance_wallet</span>
+      <span class="text-xs font-medium">预算</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant p-2" href="settings.html">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="text-xs font-medium">设置</span>
+    </a>
+  </nav>
+
+  <!-- 添加/编辑预算弹窗 -->
+  <div id="budgetModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideBudgetModal()"></div>
+    <div class="absolute bottom-0 left-0 right-0 bg-surface-container-lowest rounded-t-3xl p-6 max-w-md mx-auto max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-outline rounded-full mx-auto mb-4"></div>
+      <h3 id="budgetModalTitle" class="text-xl font-semibold text-center mb-6">添加预算</h3>
+
+      <!-- 分类选择 -->
+      <div class="mb-4">
+        <p class="text-sm text-on-surface-variant mb-3">选择分类</p>
+        <div id="categorySelectGrid" class="grid grid-cols-4 gap-2 p-4 bg-surface-container rounded-xl max-h-48 overflow-y-auto">
+          <!-- 分类选项 -->
+        </div>
+      </div>
+
+      <!-- 预算金额 -->
+      <div class="mb-4">
+        <p class="text-sm text-on-surface-variant mb-3">预算金额</p>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">¥</span>
+          <input id="budgetAmount" type="number" step="0.01" min="0" placeholder="0.00" class="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl text-on-surface outline-none focus:ring-2 focus:ring-primary text-lg">
+        </div>
+      </div>
+
+      <!-- 提示信息 -->
+      <div class="mb-6 p-4 bg-primary-container/30 rounded-xl">
+        <p class="text-sm text-on-surface-variant">
+          <span id="categorySpendingHint" class="text-primary font-medium">该分类本月已支出 ¥0.00</span>
+        </p>
+      </div>
+
+      <!-- 按钮 -->
+      <div class="flex gap-3">
+        <button onclick="hideBudgetModal()" class="flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all">
+          取消
+        </button>
+        <button onclick="saveBudget()" class="flex-1 py-3 rounded-full font-semibold bg-primary text-on-primary transition-all">
+          保存
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 删除确认弹窗 -->
+  <div id="deleteModal" class="fixed inset-0 z-[200] hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="hideDeleteModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-lowest rounded-2xl p-6 max-w-sm w-[90vw]">
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-error text-3xl">delete</span>
+        </div>
+        <h3 class="text-xl font-semibold text-on-surface mb-2">删除预算</h3>
+        <p id="deleteBudgetName" class="text-sm text-on-surface-variant mb-6">确定要删除这个预算吗？</p>
+        <div class="flex gap-3">
+          <button onclick="hideDeleteModal()" class="flex-1 py-3 rounded-full font-semibold bg-surface-container text-on-surface-variant transition-all">
+            取消
+          </button>
+          <button id="confirmDeleteBtn" onclick="confirmDelete()" class="flex-1 py-3 rounded-full font-semibold bg-error text-white transition-all">
+            删除
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/api';
+
+    let currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM格式
+    let budgetsData = []; // 用户预算数据
+    let categorySpending = {}; // 各类别本月支出
+    let expenseCategories = []; // 分类列表
+    let editingBudgetId = null;
+    let selectedCategoryId = null;
+    let allBudgetedCategoryIds = []; // 当前月已有预算的分类ID列表
+
+    // 获取token
+    function getAuthHeaders() {
+      const token = localStorage.getItem('finance_token');
+      return token ? { 'Authorization': `Bearer ${token}` } : {};
+    }
+
+    // API请求封装
+    async function apiRequest(url, options = {}) {
+      const defaultOptions = {
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
+      };
+
+      const response = await fetch(url, { ...defaultOptions, ...options });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '请求失败');
+      }
+
+      return data;
+    }
+
+    // 初始化
+    async function init() {
+      // 检查登录状态
+      const token = localStorage.getItem('finance_token');
+      if (!token) {
+        alert('请先登录');
+        window.location.href = 'login.html';
+        return;
+      }
+      initMonthSelector();
+      await loadCategories();
+      await loadBudgets();
+      await loadCategorySpending();
+    }
+
+    // 初始化月份选择器
+    function initMonthSelector() {
+      const selector = document.getElementById('monthSelector');
+      const now = new Date();
+      let options = '';
+
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const value = date.toISOString().slice(0, 7);
+        const label = `${date.getFullYear()}年${date.getMonth() + 1}月`;
+        const selected = value === currentMonth ? 'selected' : '';
+        options += `<option value="${value}" ${selected}>${label}</option>`;
+      }
+      selector.innerHTML = options;
+    }
+
+    // 加载分类列表
+    async function loadCategories() {
+      try {
+        const result = await apiRequest(`${API_BASE}/budgets/categories`);
+        if (result.code === 200) {
+          expenseCategories = result.data;
+        }
+      } catch (error) {
+        console.error('获取分类失败:', error);
+        // 使用默认分类作为后备
+        expenseCategories = [
+          { id: 1, name: '餐饮', icon: '🍜', color: '#FF6B6B' },
+          { id: 2, name: '交通', icon: '🚗', color: '#4ECDC4' },
+          { id: 3, name: '购物', icon: '🛒', color: '#FFE66D' },
+          { id: 4, name: '娱乐', icon: '🎬', color: '#95E1D3' },
+          { id: 5, name: '居住', icon: '🏠', color: '#F38181' },
+          { id: 6, name: '医疗', icon: '💊', color: '#AA96DA' },
+          { id: 7, name: '教育', icon: '📚', color: '#FCBAD3' },
+          { id: 8, name: '其他', icon: '📦', color: '#A8D8EA' }
+        ];
+      }
+    }
+
+    // 加载预算数据
+    async function loadBudgets() {
+      currentMonth = document.getElementById('monthSelector').value;
+
+      try {
+        const result = await apiRequest(`${API_BASE}/budgets?month=${currentMonth}`);
+        if (result.code === 200) {
+          budgetsData = result.data.budgets;
+          const summary = result.data.summary;
+
+          // 更新汇总信息
+          updateSummary(summary);
+
+          // 记录已有预算的分类ID
+          allBudgetedCategoryIds = budgetsData.map(b => b.categoryId);
+
+          // 渲染预算列表
+          renderBudgetList();
+        }
+      } catch (error) {
+        console.error('获取预算数据失败:', error);
+        budgetsData = [];
+        updateSummary({ totalBudget: 0, totalSpent: 0, totalRemaining: 0, overBudgetCount: 0, overBudgetAmount: 0 });
+        renderBudgetList();
+      }
+    }
+
+    // 加载各类别支出
+    async function loadCategorySpending() {
+      try {
+        const result = await apiRequest(`${API_BASE}/budgets/category-spending?month=${currentMonth}`);
+        if (result.code === 200) {
+          categorySpending = result.data;
+        }
+      } catch (error) {
+        console.error('获取分类支出失败:', error);
+        categorySpending = {};
+      }
+    }
+
+    // 渲染预算列表
+    function renderBudgetList() {
+      const container = document.getElementById('budgetList');
+      const emptyState = document.getElementById('emptyState');
+
+      if (budgetsData.length === 0) {
+        container.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+
+      let html = '';
+      budgetsData.forEach(budget => {
+        const percentage = budget.budgetAmount > 0 ? Math.min((budget.spent / budget.budgetAmount) * 100, 100) : 0;
+
+        html += `
+          <div class="bg-white rounded-xl p-4 hover:shadow-md transition-all">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" style="background-color: ${budget.categoryColor}20">
+                ${budget.categoryIcon}
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-on-surface">${budget.categoryName}</h4>
+                <p class="text-sm text-on-surface-variant">预算 ¥${budget.budgetAmount.toFixed(2)}</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="editBudget(${budget.id})" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-all">
+                  <span class="material-symbols-outlined text-sm text-on-surface-variant">edit</span>
+                </button>
+                <button onclick="showDeleteBudget(${budget.id})" class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center hover:bg-error hover:text-white transition-all">
+                  <span class="material-symbols-outlined text-sm text-error">delete</span>
+                </button>
+              </div>
+            </div>
+            <div class="mb-2">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-on-surface-variant">已使用</span>
+                <span class="${budget.isOverBudget ? 'text-error' : 'text-on-surface'}">¥${budget.spent.toFixed(2)} / ¥${budget.budgetAmount.toFixed(2)}</span>
+              </div>
+              <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+                <div class="h-full rounded-full progress-bar ${budget.isOverBudget ? 'bg-error' : ''}" style="width: ${percentage}%; background-color: ${budget.isOverBudget ? '' : budget.categoryColor}"></div>
+              </div>
+            </div>
+            ${budget.isOverBudget ? `
+            <div class="bg-error/10 rounded-lg p-2 mb-2">
+              <p class="text-sm text-error font-medium">⚠️ 已超出预算 ¥${Math.abs(budget.remaining).toFixed(2)}</p>
+            </div>
+            ` : ''}
+            <div class="flex justify-between text-sm">
+              <span class="${budget.remaining >= 0 ? 'text-success' : 'text-error'}">
+                ${budget.remaining >= 0 ? '剩余' : '超支'} ¥${Math.abs(budget.remaining).toFixed(2)}
+              </span>
+              <span class="text-on-surface-variant">
+                ${percentage.toFixed(0)}%
+              </span>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 更新汇总信息
+    function updateSummary(summary) {
+      const totalBudget = summary?.totalBudget || 0;
+      const totalSpent = summary?.totalSpent || 0;
+      const totalRemaining = summary?.totalRemaining || 0;
+      const overBudgetCount = summary?.overBudgetCount || 0;
+
+      document.getElementById('totalBudget').textContent = totalBudget.toFixed(2);
+      document.getElementById('totalSpent').textContent = totalSpent.toFixed(2);
+      document.getElementById('totalRemaining').textContent = `¥${totalRemaining.toFixed(2)}`;
+      document.getElementById('totalRemaining').className = totalRemaining >= 0 ? 'font-semibold text-success' : 'font-semibold text-error';
+      document.getElementById('overBudgetCount').textContent = overBudgetCount;
+
+      const progress = totalBudget > 0 ? Math.min((totalSpent / totalBudget) * 100, 100) : 0;
+      const progressBar = document.getElementById('totalProgress');
+      progressBar.style.width = `${progress}%`;
+      progressBar.className = `h-full rounded-full progress-bar ${progress >= 100 ? 'bg-error' : progress >= 80 ? 'bg-warning' : 'bg-success'}`;
+    }
+
+    // 显示添加预算弹窗
+    function showAddBudgetModal() {
+      editingBudgetId = null;
+      selectedCategoryId = null;
+      document.getElementById('budgetModalTitle').textContent = '添加预算';
+      document.getElementById('budgetAmount').value = '';
+      document.getElementById('categorySpendingHint').textContent = '请先选择分类';
+
+      // 渲染分类选择
+      renderCategorySelect();
+
+      document.getElementById('budgetModal').classList.remove('hidden');
+    }
+
+    // 编辑预算
+    function editBudget(id) {
+      const budget = budgetsData.find(b => b.id === id);
+      if (!budget) return;
+
+      editingBudgetId = id;
+      selectedCategoryId = budget.categoryId;
+      document.getElementById('budgetModalTitle').textContent = '编辑预算';
+      document.getElementById('budgetAmount').value = budget.budgetAmount.toString();
+
+      renderCategorySelect();
+      updateCategorySpendingHint();
+
+      document.getElementById('budgetModal').classList.remove('hidden');
+    }
+
+    // 渲染分类选择
+    function renderCategorySelect() {
+      const container = document.getElementById('categorySelectGrid');
+      let html = '';
+
+      expenseCategories.forEach(cat => {
+        // 检查是否已有预算（排除当前编辑的）
+        const hasBudget = allBudgetedCategoryIds.includes(cat.id) && cat.id !== selectedCategoryId;
+        const selected = cat.id === selectedCategoryId;
+
+        html += `
+          <button
+            onclick="selectCategory(${cat.id})"
+            class="p-3 rounded-xl flex flex-col items-center gap-1 transition-all ${selected ? 'bg-primary-container ring-2 ring-primary' : hasBudget ? 'bg-surface-container opacity-50 cursor-not-allowed' : 'bg-surface-container hover:bg-surface-container-high cursor-pointer'}"
+            ${hasBudget ? 'disabled' : ''}
+          >
+            <span class="text-2xl">${cat.icon}</span>
+            <span class="text-xs text-on-surface">${cat.name}</span>
+            ${hasBudget ? '<span class="text-[10px] text-error">已有</span>' : ''}
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 选择分类
+    function selectCategory(id) {
+      // 检查是否已有预算
+      if (allBudgetedCategoryIds.includes(id) && id !== selectedCategoryId) {
+        return;
+      }
+      selectedCategoryId = id;
+      updateCategorySpendingHint();
+      renderCategorySelect();
+    }
+
+    // 更新分类支出提示
+    function updateCategorySpendingHint() {
+      const hint = document.getElementById('categorySpendingHint');
+      if (selectedCategoryId) {
+        const spending = categorySpending[selectedCategoryId];
+        const category = expenseCategories.find(c => c.id === selectedCategoryId);
+        hint.textContent = `${category?.name || ''}本月已支出 ¥${(spending?.spent || 0).toFixed(2)}`;
+      }
+    }
+
+    // 保存预算
+    async function saveBudget() {
+      const amount = parseFloat(document.getElementById('budgetAmount').value);
+
+      if (!selectedCategoryId) {
+        alert('请选择分类');
+        return;
+      }
+
+      if (!amount || amount <= 0) {
+        alert('请输入有效的预算金额');
+        return;
+      }
+
+      try {
+        const result = await apiRequest(`${API_BASE}/budgets`, {
+          method: 'POST',
+          body: JSON.stringify({
+            categoryId: selectedCategoryId,
+            budgetAmount: amount,
+            budgetMonth: currentMonth
+          })
+        });
+
+        if (result.code === 200) {
+          alert(result.message);
+          hideBudgetModal();
+          await loadBudgets();
+          await loadCategorySpending();
+        } else {
+          alert(result.message || '保存失败');
+        }
+      } catch (error) {
+        console.error('保存预算失败:', error);
+        alert('保存预算失败，请稍后重试');
+      }
+    }
+
+    // 隐藏预算弹窗
+    function hideBudgetModal() {
+      document.getElementById('budgetModal').classList.add('hidden');
+    }
+
+    // 显示删除确认弹窗
+    function showDeleteBudget(id) {
+      const budget = budgetsData.find(b => b.id === id);
+      if (!budget) return;
+
+      document.getElementById('deleteBudgetName').textContent = `确定要删除"${budget.categoryName}"的预算吗？`;
+      document.getElementById('confirmDeleteBtn').onclick = () => confirmDelete(id);
+
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    // 确认删除
+    async function confirmDelete(id) {
+      try {
+        const result = await apiRequest(`${API_BASE}/budgets/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (result.code === 200) {
+          hideDeleteModal();
+          await loadBudgets();
+          await loadCategorySpending();
+        } else {
+          alert(result.message || '删除失败');
+        }
+      } catch (error) {
+        console.error('删除预算失败:', error);
+        alert('删除预算失败，请稍后重试');
+      }
+    }
+
+    // 隐藏删除弹窗
+    function hideDeleteModal() {
+      document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    // 页面加载时初始化
+    init();
+  </script>
+</body>
+</html>

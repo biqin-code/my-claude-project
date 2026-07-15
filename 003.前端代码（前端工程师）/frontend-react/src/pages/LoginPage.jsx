@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../api/auth';
-import { isLoggedIn } from '../utils/auth';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -9,14 +8,6 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  // 如果已登录，跳转到首页
-  React.useEffect(() => {
-    if (isLoggedIn()) {
-      navigate('/dashboard');
-    }
-  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,123 +29,109 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 overflow-hidden relative bg-background">
-      {/* 背景装饰 */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none overflow-hidden">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-success/10 rounded-full blur-3xl"></div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-6 md:p-8 bg-gradient-to-br from-pink-50 via-purple-50 to-pink-50">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-      <main className="w-full max-w-md z-10">
-        <div className="bg-surface-container-lowest rounded-2xl p-8 flex flex-col items-center shadow-lg">
-          {/* Logo和标题 */}
-          <div className="mb-6 flex flex-col items-center gap-3">
-            <div className="w-20 h-20 rounded-full bg-pink-100 flex items-center justify-center text-5xl">🍀</div>
-            <h1 className="text-2xl font-bold text-primary">我的账本</h1>
-            <p className="text-sm text-secondary">开启您的财务极简之旅</p>
-          </div>
-
-          {/* 登录表单 */}
-          <form className="w-full flex flex-col gap-5" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-error/10 text-error text-sm p-3 rounded-xl text-center">
-                {error}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-2">
-              <label className="text-sm text-on-surface-variant" htmlFor="username">用户名</label>
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">person</span>
-                <input
-                  className="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-base focus:ring-2 focus:ring-primary focus:border-transparent outline-none placeholder:text-outline-variant"
-                  id="username"
-                  name="username"
-                  placeholder="请输入您的用户名"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <label className="text-sm text-on-surface-variant" htmlFor="password">密码</label>
-              </div>
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
-                <input
-                  className="w-full pl-12 pr-12 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-base focus:ring-2 focus:ring-primary focus:border-transparent outline-none placeholder:text-outline-variant"
-                  id="password"
-                  name="password"
-                  placeholder="请输入您的登录密码"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary"
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <span className="material-symbols-outlined">
-                    {showPassword ? 'visibility_off' : 'visibility'}
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <button
-              className="mt-2 w-full text-lg font-semibold py-4 rounded-xl shadow-sm hover:brightness-105 active:scale-[0.98] transition-all flex justify-center items-center gap-2 bg-primary text-on-primary disabled:opacity-50"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="material-symbols-outlined animate-spin">progress_activity</span>
-              ) : (
-                <>
-                  登录
-                  <span className="material-symbols-outlined">login</span>
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* 注册入口 */}
-          <div className="mt-8 w-full">
-            <div className="relative flex items-center mb-6">
-              <div className="flex-grow border-t border-outline-variant"></div>
-              <span className="flex-shrink mx-4 text-xs text-outline-variant">快捷方式</span>
-              <div className="flex-grow border-t border-outline-variant"></div>
-            </div>
-
-            <div className="flex justify-center gap-4 mb-6">
-              <button className="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all active:scale-90">
-                <span className="material-symbols-outlined text-secondary">fingerprint</span>
-              </button>
-              <button className="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-all active:scale-90">
-                <span className="material-symbols-outlined text-secondary">face</span>
-              </button>
-            </div>
-
-            <div className="text-center">
-              <p className="text-sm text-on-surface-variant">
-                没有账号？
-                <Link className="text-primary font-semibold hover:underline" to="/register">
-                  立即注册
-                </Link>
-              </p>
+        {/* 左侧插图 */}
+        <div className="hidden lg:flex items-center justify-center p-8">
+          <div className="w-full max-w-md aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
+            <div className="w-full h-full rounded-2xl bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center text-8xl">
+              💰
             </div>
           </div>
         </div>
 
-        <footer className="mt-6 text-center">
-          <p className="text-xs text-outline">© 2024 我的账本 - 智能财务管理专家</p>
-        </footer>
-      </main>
+        {/* 登录表单 */}
+        <div className="flex flex-col items-center w-full max-w-md mx-auto lg:ml-auto lg:mr-0">
+          <div className="w-full bg-white rounded-2xl p-8 shadow-lg">
+
+            {/* 品牌标识 */}
+            <div className="flex flex-col items-center mb-8">
+              <div className="w-24 h-24 mb-4 rounded-full bg-pink-100 flex items-center justify-center text-6xl">🍀</div>
+              <h1 className="text-2xl font-bold text-primary">我的账本</h1>
+              <p className="text-sm text-gray-500 mt-2">开启您的财务极简之旅</p>
+            </div>
+
+            {/* 表单 */}
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* 用户名 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500 ml-3">用户名</label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">person</span>
+                  <input
+                    className="w-full pl-12 pr-4 py-4 bg-gray-100 border-2 border-transparent rounded-full text-base focus:border-pink-200 focus:bg-white focus:outline-none transition-all"
+                    id="username"
+                    name="username"
+                    placeholder="请输入用户名"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    autoComplete="username"
+                  />
+                </div>
+              </div>
+
+              {/* 密码 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500 ml-3">密码</label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">lock</span>
+                  <input
+                    className="w-full pl-12 pr-4 py-4 bg-gray-100 border-2 border-transparent rounded-full text-base focus:border-pink-200 focus:bg-white focus:outline-none transition-all"
+                    id="password"
+                    name="password"
+                    placeholder="请输入密码"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                  />
+                </div>
+              </div>
+
+              {/* 错误提示 */}
+              {error && (
+                <div className="text-red-500 text-sm text-center">{error}</div>
+              )}
+
+              {/* 登录按钮 */}
+              <div className="pt-4">
+                <button
+                  className="w-full bg-primary hover:brightness-105 active:scale-95 text-lg font-semibold py-4 rounded-full shadow-lg transition-all flex items-center justify-center gap-2 text-white disabled:opacity-50"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="material-symbols-outlined animate-spin">progress_activity</span>
+                  ) : (
+                    <>
+                      <span>登录</span>
+                      <span className="material-symbols-outlined">arrow_forward</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {/* 服务条款 */}
+            <div className="mt-6 text-center">
+              <p className="text-xs text-gray-400">
+                登录即代表您同意 <a className="text-primary hover:underline font-medium" href="#">服务条款</a> 和 <a className="text-primary hover:underline font-medium" href="#">隐私政策</a>
+              </p>
+            </div>
+          </div>
+
+          {/* 注册入口 */}
+          <div className="mt-6 text-center">
+            <p className="text-base text-gray-500">
+              没有账号？ <Link className="text-primary font-semibold hover:underline" to="/register">立即注册</Link>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
