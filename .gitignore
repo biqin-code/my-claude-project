@@ -1,33 +1,18 @@
 # Dependencies
-*/node_modules/
-*/*/node_modules/
-*/*/*/node_modules/
-*/package-lock.json
-*/*/package-lock.json
+node_modules/
 
 # Build outputs
-*/dist/
-*/build/
+*.css
+*.js
+dist/
+
+# Java build outputs
+target/
 
 # IDE
 .idea/
-.vscode/
-*.swp
-*.swo
+*.iml
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Logs
-*.log
-npm-debug.log*
-
-# Editor
-*.sublime-workspace
-*.sublime-project
