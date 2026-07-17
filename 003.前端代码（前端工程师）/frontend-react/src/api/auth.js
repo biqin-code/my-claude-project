@@ -2,7 +2,7 @@
  * 认证API服务
  */
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api';
 
 /**
  * 通用请求封装
@@ -23,6 +23,14 @@ async function request(url, options = {}) {
     ...defaultOptions,
     ...options,
   });
+
+  // 如果是401错误（Token过期或无效），清除本地token并跳转登录页
+  if (response.status === 401) {
+    localStorage.removeItem('finance_token');
+    localStorage.removeItem('finance_user');
+    window.location.href = '/login';
+    throw new Error('Token已过期，请重新登录');
+  }
 
   const data = await response.json();
 

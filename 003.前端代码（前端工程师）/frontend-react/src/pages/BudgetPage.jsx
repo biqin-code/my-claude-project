@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import UserAvatarMenu from '../components/UserAvatarMenu';
 import { getBudgets, getBudgetCategories, getCategorySpending, saveBudget, deleteBudget } from '../api/budget';
+import { getCurrentUser } from '../api/auth';
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api';
 
 // 格式化金额
 function formatAmount(amount) {
@@ -23,6 +25,14 @@ async function apiRequest(url, options = {}) {
   }
 
   const response = await fetch(url, { ...defaultOptions, ...options });
+
+  if (response.status === 401) {
+    localStorage.removeItem('finance_token');
+    localStorage.removeItem('finance_user');
+    window.location.href = '/login';
+    throw new Error('Token已过期，请重新登录');
+  }
+
   const data = await response.json();
 
   if (!response.ok) {
@@ -33,6 +43,7 @@ async function apiRequest(url, options = {}) {
 }
 
 function BudgetPage() {
+  const [user, setUser] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date().toISOString().slice(0, 7));
   const [budgets, setBudgets] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -69,6 +80,12 @@ function BudgetPage() {
   // 加载数据
   const loadData = async () => {
     try {
+      // 加载用户信息
+      const userResult = await getCurrentUser();
+      if (userResult.code === 200) {
+        setUser(userResult.data);
+      }
+
       // 加载分类
       const catResult = await getBudgetCategories();
       if (catResult.code === 200) {
@@ -190,7 +207,7 @@ function BudgetPage() {
       <aside className="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-6 gap-3 fixed z-40">
         <div className="flex flex-col gap-3 mb-6">
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-2xl">🍀</div>
+            <UserAvatarMenu user={user} />
             <div className="text-lg font-bold text-primary">我的账本</div>
           </div>
           <div className="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
@@ -226,7 +243,7 @@ function BudgetPage() {
         <header className="w-full top-0 sticky shadow-sm bg-surface z-30 flex justify-between items-center px-5 h-16">
           <div className="flex items-center gap-4">
             <div className="md:hidden flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-lg">🍀</div>
+              <UserAvatarMenu user={user} />
               <div className="text-xl font-bold text-primary">我的账本</div>
             </div>
             <div className="hidden md:block text-xl font-semibold text-primary">预算管理</div>

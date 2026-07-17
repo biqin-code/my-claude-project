@@ -2,7 +2,7 @@
  * 预算管理API服务
  */
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api';
 
 async function request(url, options = {}) {
   const defaultOptions = {

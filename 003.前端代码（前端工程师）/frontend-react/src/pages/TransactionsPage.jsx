@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import UserAvatarMenu from '../components/UserAvatarMenu';
+import { getCurrentUser } from '../api/auth';
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api';
 
 // 格式化金额
 function formatAmount(amount) {
@@ -36,6 +38,14 @@ async function apiRequest(url, options = {}) {
     defaultOptions.headers['Authorization'] = `Bearer ${token}`;
   }
   const response = await fetch(url, { ...defaultOptions, ...options });
+
+  if (response.status === 401) {
+    localStorage.removeItem('finance_token');
+    localStorage.removeItem('finance_user');
+    window.location.href = '/login';
+    throw new Error('Token已过期，请重新登录');
+  }
+
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || '请求失败');
   return data;
@@ -43,6 +53,7 @@ async function apiRequest(url, options = {}) {
 
 function TransactionsPage() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [records, setRecords] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,9 +85,17 @@ function TransactionsPage() {
 
   const paymentMethods = ['支付宝', '微信支付', '银行转账', '现金', '公交卡', '医保卡', '滴滴出行'];
 
-  // 加载分类
+  // 加载用户信息和分类
   useEffect(() => {
-    async function loadCategories() {
+    async function loadUserAndCategories() {
+      try {
+        const userResult = await getCurrentUser();
+        if (userResult.code === 200) {
+          setUser(userResult.data);
+        }
+      } catch (error) {
+        console.error('获取用户信息失败:', error);
+      }
       try {
         const result = await apiRequest(`${API_BASE}/transactions/categories`);
         if (result.code === 200) {
@@ -86,7 +105,7 @@ function TransactionsPage() {
         console.error('获取分类失败:', error);
       }
     }
-    loadCategories();
+    loadUserAndCategories();
   }, []);
 
   // 加载记录
@@ -237,7 +256,7 @@ function TransactionsPage() {
       <aside className="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-6 gap-3 fixed z-40">
         <div className="flex flex-col gap-3 mb-6">
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-2xl">🍀</div>
+            <UserAvatarMenu user={user} />
             <div className="text-lg font-bold text-primary">我的账本</div>
           </div>
           <div className="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
@@ -278,14 +297,16 @@ function TransactionsPage() {
         <header className="w-full top-0 sticky z-30 shadow-sm bg-surface flex justify-between items-center px-5 h-16">
           <div className="flex items-center gap-4">
             <div className="md:hidden flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-lg">🍀</div>
+              <UserAvatarMenu user={user} />
               <div className="text-xl font-bold text-primary">我的账本</div>
             </div>
             <div className="hidden md:block text-xl font-semibold text-primary">收支明细</div>
           </div>
-          <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors" onClick={() => setShowFilter(!showFilter)}>
-            <span className="material-symbols-outlined text-primary">filter_list</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors" onClick={() => setShowFilter(!showFilter)}>
+              <span className="material-symbols-outlined text-primary">filter_list</span>
+            </button>
+          </div>
         </header>
 
         {/* 筛选区域 - 固定在顶部导航下方，不随页面滚动 */}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import UserAvatarMenu from '../components/UserAvatarMenu';
 import { getCurrentUser } from '../api/auth';
 import { logout } from '../utils/auth';
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api';
 
 // API请求
 async function apiRequest(url, options = {}) {
@@ -19,6 +20,14 @@ async function apiRequest(url, options = {}) {
   }
 
   const response = await fetch(url, { ...defaultOptions, ...options });
+
+  // 先检查401错误
+  if (response.status === 401) {
+    localStorage.removeItem('finance_token');
+    localStorage.removeItem('finance_user');
+    window.location.href = '/login';
+    throw new Error('Token已过期，请重新登录');
+  }
 
   // 先检查状态码
   if (!response.ok) {
@@ -374,7 +383,7 @@ function SettingsPage() {
       <aside className="h-screen w-64 left-0 hidden md:flex flex-col bg-surface-container-low p-6 gap-3 fixed z-40">
         <div className="flex flex-col gap-3 mb-6">
           <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-2xl">🍀</div>
+            <UserAvatarMenu user={user} />
             <div className="text-lg font-bold text-primary">我的账本</div>
           </div>
           <div className="text-sm text-on-surface-variant opacity-70">财务管理系统</div>
@@ -411,7 +420,7 @@ function SettingsPage() {
         <header className="w-full top-0 sticky z-30 shadow-sm bg-surface flex justify-between items-center px-5 h-16">
           <div className="flex items-center gap-4">
             <div className="md:hidden flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-lg">🍀</div>
+              <UserAvatarMenu user={user} />
               <div className="text-xl font-bold text-primary">我的账本</div>
             </div>
             <div className="hidden md:block text-xl font-semibold text-primary">设置</div>
